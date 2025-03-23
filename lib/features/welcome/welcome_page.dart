@@ -58,12 +58,10 @@ class WelcomePage extends StatelessWidget {
                   ],
                 ),
 
-                SizedBox(height: screenWidth * 0.07),
-
                 // svg
                 SvgPicture.asset(SvgAssets.welcome_robot),
 
-                SizedBox(height: screenWidth * 0.1),
+                SizedBox(height: screenWidth * 0.05),
 
                 // button CTA
                 InkWell(
@@ -103,8 +101,6 @@ class WelcomePage extends StatelessWidget {
                     ),
                   ),
                 ),
-
-                SizedBox(height: screenWidth * 0.1),
 
                 // Row -> Already have an account, sign in
                 SizedBox(

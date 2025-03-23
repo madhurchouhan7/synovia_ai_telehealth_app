@@ -8,6 +8,10 @@ class SvgAssets {
 
   static const String logo_mark = 'assets/icons/custom/logo_mark.svg';
 
+  static const String solid_email = 'assets/icons/custom/solid_email.svg';
+  static const String solid_lock = 'assets/icons/custom/solid_lock.svg';
+  static const String solid_mobile = 'assets/icons/custom/solid_mobile.svg';
+
   static const String solid_arrow_right_sm =
       'assets/icons/custom/solid_arrow_right_sm.svg';
 
@@ -22,6 +26,8 @@ class SvgAssets {
   static const String robot_onboarding =
       'assets/images/svg/robot_onboarding.svg';
 
+  static const String lock = 'assets/images/svg/lock.svg';
+
   static const String welcome_logo = 'assets/images/svg/welcome_logo.svg';
 
   static const String welcome_robot = 'assets/images/svg/welcome_robot.svg';
@@ -29,4 +35,7 @@ class SvgAssets {
   static const String facebook = 'assets/icons/custom/facebook.svg';
   static const String google = 'assets/icons/custom/google.svg';
   static const String insta = 'assets/icons/custom/insta.svg';
+
+  static const String email = 'assets/icons/custom/email.svg';
+  static const String password = 'assets/icons/custom/password.svg';
 }

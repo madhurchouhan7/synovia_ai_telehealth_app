@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "182417883732",
+    "project_id": "synovia-ai-telehealth",
+    "storage_bucket": "synovia-ai-telehealth.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182417883732:android:cea7e341914b2a7c9463c1",
+        "android_client_info": {
+          "package_name": "com.example.synovia_ai_telehealth_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBmtVR0nAAkzqcLwOOwFK1iMKQpR-eZ7M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
