@@ -6,6 +6,7 @@ import 'package:synovia_ai_telehealth_app/features/auth/presentation/screens/sig
 import 'package:synovia_ai_telehealth_app/features/auth/presentation/widgets/cta_button.dart';
 import 'package:synovia_ai_telehealth_app/features/auth/presentation/widgets/forgot_methods.dart';
 import 'package:synovia_ai_telehealth_app/features/onboarding_screen/presentation/widgets/custom_back_button.dart';
+import 'package:synovia_ai_telehealth_app/features/welcome/personalized_health_insights.dart';
 import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
 
 class ForgotPasswordPage extends StatelessWidget {
@@ -42,11 +43,12 @@ class ForgotPasswordPage extends StatelessWidget {
                     style: GoogleFonts.nunito(
                       color: Colors.white,
                       fontSize: 50 * fontSize,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w900,
                     ),
                   ),
 
                   SizedBox(height: 6),
+                  
                   // subtitle
                   Text(
                     'Select which methods you would like to reset.',
@@ -94,10 +96,17 @@ class ForgotPasswordPage extends StatelessWidget {
                 child: CtaButton(
                   text: 'Reset Password',
                   svgAssets: SvgAssets.solid_arrow_right_sm,
-                  onTap: null,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      pageRoute(PersonalizedHealthInsights()),
+                    );
+                  },
                 ),
               ),
+
               Spacer(),
+
               // lock svg
               Stack(
                 children: [

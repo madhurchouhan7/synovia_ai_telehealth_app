@@ -44,7 +44,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 'Sign Up for Free',
                 style: GoogleFonts.nunito(
                   color: Colors.white,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w900,
                   fontSize: 55 * fontSize,
                 ),
               ),

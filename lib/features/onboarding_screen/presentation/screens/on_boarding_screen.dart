@@ -139,11 +139,12 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(
             content.title,
+            overflow: TextOverflow.clip,
             textAlign: TextAlign.center,
             style: GoogleFonts.nunito(
               color: Colors.white,
-              fontSize: 48 * fontSize,
-              fontWeight: FontWeight.bold,
+              fontSize: 40 * fontSize,
+              fontWeight: FontWeight.w900,
             ),
           ),
         ),

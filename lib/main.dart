@@ -30,6 +30,7 @@ class _MyAppState extends State<MyApp> {
   void initialization() async {
     await Future.delayed(Duration(seconds: 2));
     FlutterNativeSplash.remove();
+
   }
 
   @override

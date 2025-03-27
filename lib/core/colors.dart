@@ -7,6 +7,7 @@ const Color secondaryColor = Color(0xFF212C24);
 
 // background colors
 const Color backgroundColor = Color(0xFF313A34);
+const Color cardBackgroundColor = Color(0xFF2D4133);
 
 // Text Colors
 const lightTextColor = Color(0xFFC5C8C6);

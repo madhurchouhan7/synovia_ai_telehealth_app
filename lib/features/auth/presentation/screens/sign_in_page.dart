@@ -48,7 +48,7 @@ class _SignInPageState extends State<SignInPage> {
                 'Sign In',
                 style: GoogleFonts.nunito(
                   color: Colors.white,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w900,
                   fontSize: 55 * fontSize,
                 ),
               ),

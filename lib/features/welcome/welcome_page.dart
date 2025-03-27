@@ -35,11 +35,12 @@ class WelcomePage extends StatelessWidget {
 
                     // title
                     Text(
+                      overflow: TextOverflow.clip,
                       'Welcome to the Synovia AI Telehealth App',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.nunito(
                         color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w900,
                         fontSize: 40 * fontSize,
                       ),
                     ),
