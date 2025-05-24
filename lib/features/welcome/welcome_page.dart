@@ -87,6 +87,7 @@ class WelcomePage extends StatelessWidget {
                             'Get Started',
                             style: GoogleFonts.nunito(
                               fontSize: 28 * fontSize,
+                              color: Colors.black,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

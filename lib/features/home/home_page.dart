@@ -137,7 +137,7 @@ class _HomePageState extends State<HomePage> {
             gap: 10,
             activeColor: Colors.white,
             tabBorderRadius: 30,
-            tabActiveBorder: Border.all(color: Colors.white, width: 1.2),
+            tabActiveBorder: Border.all(color: Colors.white, width: 2),
             selectedIndex: _selectedIndex,
             onTabChange: (index) {
               setState(() {

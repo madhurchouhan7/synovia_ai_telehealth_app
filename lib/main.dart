@@ -1,19 +1,32 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
+import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/provider/chat_provider.dart';
+import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/provider/settings_provider.dart';
 import 'package:synovia_ai_telehealth_app/features/welcome/welcome_page.dart';
-import 'package:synovia_ai_telehealth_app/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'features/auth/presentation/screens/sign_in_page.dart';
 import 'features/home/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
+
+  await ChatProvider.initHive();
+
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
+        ChangeNotifierProvider(create: (context) => SettingsProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class SplashApp extends StatefulWidget {
@@ -53,7 +66,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Telehealth App',
+      title: 'Synovia Telehealth App',
       theme: ThemeData.dark(),
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
@@ -66,7 +79,7 @@ class MyApp extends StatelessWidget {
           if (snapshot.hasData) {
             return HomePage();
           }
-          return SignInPage();
+          return WelcomePage();
         },
       ),
     );
