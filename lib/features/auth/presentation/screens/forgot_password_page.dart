@@ -48,7 +48,7 @@ class ForgotPasswordPage extends StatelessWidget {
                   ),
 
                   SizedBox(height: 6),
-                  
+
                   // subtitle
                   Text(
                     'Select which methods you would like to reset.',

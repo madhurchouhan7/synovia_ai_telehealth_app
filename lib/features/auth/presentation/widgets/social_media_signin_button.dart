@@ -3,9 +3,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
 
 class SocialMediaSigninButton extends StatelessWidget {
-  const SocialMediaSigninButton({super.key, required this.svgAssets});
+  const SocialMediaSigninButton({super.key, required this.svgAssets, required this.onTap});
 
   final String svgAssets;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

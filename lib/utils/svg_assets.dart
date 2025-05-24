@@ -38,4 +38,18 @@ class SvgAssets {
 
   static const String email = 'assets/icons/custom/email.svg';
   static const String password = 'assets/icons/custom/password.svg';
+
+  static const String nav_home = 'assets/icons/custom/nav_home.svg';
+  static const String nav_chart = 'assets/icons/custom/nav_chart.svg';
+  static const String nav_chat = 'assets/icons/custom/nav_chat.svg';
+  static const String nav_document = 'assets/icons/custom/nav_document.svg';
+  static const String nav_user = 'assets/icons/custom/nav_user.svg';
+
+  static const String ic_cal = 'assets/icons/custom/ic_calendar.svg';
+
+  static const String ic_notification = 'assets/icons/custom/ic_noti.svg';
+
+  static const String ic_search_bold = 'assets/icons/custom/ic_search_bold.svg';
+
+  static const String ai_robot = 'assets/icons/custom/ai_robot.svg';
 }
