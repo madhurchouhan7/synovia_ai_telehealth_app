@@ -4,6 +4,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
+import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/screens/chat_page.dart';
+import 'package:synovia_ai_telehealth_app/features/home/screens/profile_page.dart';
+import 'package:synovia_ai_telehealth_app/features/home/screens/progress_page.dart';
+import 'package:synovia_ai_telehealth_app/features/home/screens/report_page.dart';
 import 'package:synovia_ai_telehealth_app/features/home/widget/ai_symptoms_checker.dart';
 import 'package:synovia_ai_telehealth_app/features/home/widget/chat_bot_widget.dart';
 import 'package:synovia_ai_telehealth_app/features/home/widget/find_nearby_doctors.dart';
@@ -11,8 +15,105 @@ import 'package:synovia_ai_telehealth_app/features/home/widget/resources_article
 import 'package:synovia_ai_telehealth_app/features/home/widget/user_profile_card.dart';
 import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+
+  final List<Widget> _screens = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _screens.addAll([
+      // Home tab content
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          UserProfileCard(
+            onProfileTap: () {
+              setState(() {
+                _selectedIndex = 4; // Profile tab index
+              });
+            },
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  bottom: 20,
+                  top: 10,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'AI Symptoms Checker',
+                      style: GoogleFonts.nunito(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    AiSymptomsChecker(),
+                    SizedBox(height: 15),
+                    Text(
+                      'AI ChatBot',
+                      style: GoogleFonts.nunito(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    ChatBotWidget(
+                      onChatTap: () {
+                        setState(() {
+                          _selectedIndex = 2; // Chat tab index
+                        });
+                      },
+                    ),
+                    SizedBox(height: 15),
+                    Text(
+                      'Find Nearby Doctors',
+                      style: GoogleFonts.nunito(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    FindNearbyDoctors(),
+                    SizedBox(height: 15),
+                    Text(
+                      'Resources and Articles',
+                      style: GoogleFonts.nunito(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    ResourcesArticle(),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+
+      // progress page, chat screen, reports screen, profile screen
+      ProgressPage(),
+      ChatPage(),
+      ReportPage(),
+      ProfilePage(),
+    ]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,107 +127,35 @@ class HomePage extends StatelessWidget {
       child: SafeArea(
         child: Scaffold(
           backgroundColor: darkBackgroundColor,
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // user profile card (fixed)
-              UserProfileCard(),
-
-              // scrollable content
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                      bottom: 20,
-                      top: 10,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // AI Symptoms Checker
-                        Text(
-                          'AI Symptoms Checker',
-                          style: GoogleFonts.nunito(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-
-                        AiSymptomsChecker(),
-
-                        SizedBox(height: 15),
-
-                        // AI Chatbot
-                        Text(
-                          'AI ChatBot',
-                          style: GoogleFonts.nunito(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-
-                        ChatBotWidget(),
-
-                        // find nearby doctors
-                        SizedBox(height: 15),
-
-                        // Find Nearby Doctors
-                        Text(
-                          'Find Nearby Doctors',
-                          style: GoogleFonts.nunito(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-
-                        FindNearbyDoctors(),
-
-                        // resources and articles
-                        SizedBox(height: 15),
-
-                        // Resources and Articles
-                        Text(
-                          'Resources and Articles',
-                          style: GoogleFonts.nunito(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-
-                        ResourcesArticle(),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          body: IndexedStack(index: _selectedIndex, children: _screens),
           bottomNavigationBar: GNav(
+            curve: Curves.easeInOut,
+            tabMargin: EdgeInsets.symmetric(horizontal: 3, vertical: 8),
+            hoverColor: Color.fromARGB(255, 65, 73, 65),
+            backgroundColor: Color(0xff343A34),
+            haptic: true,
+            gap: 10,
             activeColor: Colors.white,
-            backgroundColor: nav_bar_backgroundColor,
+            tabBorderRadius: 30,
+            tabActiveBorder: Border.all(color: Colors.white, width: 1.2),
+            selectedIndex: _selectedIndex,
+            onTabChange: (index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+            },
             tabs: [
-              // Home
               GButton(
                 icon: Icons.home,
                 leading: SvgPicture.asset(SvgAssets.nav_home),
                 backgroundColor: Color(0xFF4B524B),
               ),
-
-              // Progress
               GButton(
                 icon: Icons.search,
                 leading: SvgPicture.asset(SvgAssets.nav_chart),
                 backgroundColor: Color(0xFF4B524B),
                 iconActiveColor: Colors.white,
               ),
-
-              // Chat
               GButton(
                 icon: Icons.notifications,
                 leading: SvgPicture.asset(SvgAssets.nav_chat),
@@ -134,24 +163,18 @@ class HomePage extends StatelessWidget {
                 backgroundColor: Color(0xFF4B524B),
                 iconActiveColor: Colors.white,
               ),
-
-              // Reports
               GButton(
                 icon: Icons.assessment,
                 leading: SvgPicture.asset(SvgAssets.nav_document),
                 iconColor: lightTextColor,
                 backgroundColor: Color(0xFF4B524B),
-
                 iconActiveColor: Colors.white,
               ),
-
-              // Profile
               GButton(
                 icon: Icons.settings,
                 leading: SvgPicture.asset(SvgAssets.nav_user),
                 iconColor: lightTextColor,
                 backgroundColor: Color(0xFF4B524B),
-
                 iconActiveColor: Colors.white,
               ),
             ],

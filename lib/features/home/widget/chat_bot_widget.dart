@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:synovia_ai_telehealth_app/config/routes.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
+import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/screens/chat_page.dart';
 import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
 
 class ChatBotWidget extends StatelessWidget {
-  const ChatBotWidget({super.key});
+  final VoidCallback? onChatTap;
+  const ChatBotWidget({super.key, this.onChatTap});
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +40,7 @@ class ChatBotWidget extends StatelessWidget {
 
                 // 2. button
                 InkWell(
-                  onTap: () {
-                    //
-                  },
+                  onTap: onChatTap,
                   splashColor: darkBackgroundColor,
                   highlightColor: darkBackgroundColor,
                   child: Container(
@@ -47,7 +48,7 @@ class ChatBotWidget extends StatelessWidget {
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    width: screenWidth * 0.35,
+                    width: screenWidth * 0.4,
                     height: screenWidth * 0.1,
                     child: Center(
                       child: Row(
@@ -57,7 +58,7 @@ class ChatBotWidget extends StatelessWidget {
                           Text(
                             ' Lets Talk !',
                             style: GoogleFonts.nunito(
-                              fontSize: 23 * fontSize,
+                              fontSize: 24 * fontSize,
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
                             ),

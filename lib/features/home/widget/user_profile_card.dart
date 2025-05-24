@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:synovia_ai_telehealth_app/config/routes.dart';
+import 'package:synovia_ai_telehealth_app/features/home/screens/notification_page.dart';
 import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class UserProfileCard extends StatelessWidget {
-  const UserProfileCard({super.key});
+  const UserProfileCard({super.key, this.onProfileTap});
+  final VoidCallback? onProfileTap;
 
   String _getGreeting() {
     final hour = DateTime.now().hour;
@@ -64,9 +67,15 @@ class UserProfileCard extends StatelessWidget {
                 ),
 
                 // 2. notification icon
-                SvgPicture.asset(
-                  SvgAssets.ic_notification,
-                  height: screenWidth * 0.11,
+                InkWell(
+                  onTap: () {
+                    // Handle notification tap
+                    Navigator.push(context, pageRoute(NotificationPage()));
+                  },
+                  child: SvgPicture.asset(
+                    SvgAssets.ic_notification,
+                    height: screenWidth * 0.11,
+                  ),
                 ),
               ],
             ),
@@ -111,14 +120,17 @@ class UserProfileCard extends StatelessWidget {
                 ),
 
                 // 6. user profile details
-                Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.rotationY(3.14),
-                  child: SvgPicture.asset(
-                    SvgAssets.left_back_icon,
-                    // ignore: deprecated_member_use
-                    color: Color(0xFFA4A9A4),
-                    height: screenWidth * 0.07,
+                InkWell(
+                  onTap: onProfileTap,
+                  child: Transform(
+                    alignment: Alignment.center,
+                    transform: Matrix4.rotationY(3.14),
+                    child: SvgPicture.asset(
+                      SvgAssets.left_back_icon,
+                      // ignore: deprecated_member_use
+                      color: Color(0xFFA4A9A4),
+                      height: screenWidth * 0.07,
+                    ),
                   ),
                 ),
               ],

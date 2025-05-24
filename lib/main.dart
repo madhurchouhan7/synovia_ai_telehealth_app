@@ -31,7 +31,7 @@ class _SplashAppState extends State<SplashApp> {
   }
 
   void initialization() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 3));
     FlutterNativeSplash.remove();
   }
 
@@ -59,7 +59,9 @@ class MyApp extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Scaffold(body: Center(child: CircularProgressIndicator()));
+            return Scaffold(
+              body: Center(child: CircularProgressIndicator(color: brandColor)),
+            );
           }
           if (snapshot.hasData) {
             return HomePage();
