@@ -88,6 +88,7 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
+                    SizedBox(height: 10),
                     FindNearbyDoctors(),
                     SizedBox(height: 15),
                     Text(

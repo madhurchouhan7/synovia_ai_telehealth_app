@@ -86,31 +86,30 @@ class ResourcesArticle extends StatelessWidget {
         In today's fast-paced world, maintaining a healthy and balanced diet often feels like an impossible task. Hectic schedules, long work hours, and the constant temptation of convenience foods can make it difficult to prioritize nutrition. However, with a few simple strategies, you can fuel your body effectively even when time is scarce.
 
         **1. Plan Ahead with Meal Prep:**
-        Dedicate a few hours each week to meal prepping. Cook large batches of grains, proteins, and vegetables that you can mix and match throughout the week. This minimizes decision fatigue during busy weekdays and ensures you have healthy options readily available.
+        \nDedicate a few hours each week to meal prepping. Cook large batches of grains, proteins, and vegetables that you can mix and match throughout the week. This minimizes decision fatigue during busy weekdays and ensures you have healthy options readily available.
 
         **2. Keep Healthy Snacks Handy:**
-        Avoid unhealthy cravings by stocking up on nutritious snacks. Think fruits, nuts, seeds, yogurt, vegetable sticks with hummus, or whole-grain crackers. Keep them in your bag, car, and desk drawer.
+        \nAvoid unhealthy cravings by stocking up on nutritious snacks. Think fruits, nuts, seeds, yogurt, vegetable sticks with hummus, or whole-grain crackers. Keep them in your bag, car, and desk drawer.
 
         **3. Prioritize Protein and Fiber:**
-        Include a source of protein and fiber in every meal. Protein helps you feel full and satisfied, while fiber aids digestion and stabilizes blood sugar. Examples include lean meats, fish, beans, lentils, whole grains, fruits, and vegetables.
+        \nInclude a source of protein and fiber in every meal. Protein helps you feel full and satisfied, while fiber aids digestion and stabilizes blood sugar. Examples include lean meats, fish, beans, lentils, whole grains, fruits, and vegetables.
 
         **4. Hydrate, Hydrate, Hydrate:**
-        Often, thirst is mistaken for hunger. Keep a water bottle with you throughout the day and sip regularly. Adequate hydration is crucial for energy levels, metabolism, and overall body function.
+        \nOften, thirst is mistaken for hunger. Keep a water bottle with you throughout the day and sip regularly. Adequate hydration is crucial for energy levels, metabolism, and overall body function.
 
         **5. Don't Skip Breakfast:**
-        Breakfast kickstarts your metabolism and provides energy for the day. Opt for quick and nutritious options like oatmeal with berries, Greek yogurt with granola, or a whole-wheat toast with avocado and egg.
+        \nBreakfast kickstarts your metabolism and provides energy for the day. Opt for quick and nutritious options like oatmeal with berries, Greek yogurt with granola, or a whole-wheat toast with avocado and egg.
 
         **6. Be Mindful When Eating Out:**
-        If dining out is unavoidable, make smart choices. Look for grilled or baked options, ask for sauces on the side, and don't be afraid to customize your order to include more vegetables. Control portion sizes.
+        \nIf dining out is unavoidable, make smart choices. Look for grilled or baked options, ask for sauces on the side, and don't be afraid to customize your order to include more vegetables. Control portion sizes.
 
         **7. Listen to Your Body:**
-        Pay attention to your hunger and fullness cues. Eat when you're hungry and stop when you're satisfied, not necessarily when your plate is empty. Practice mindful eating by slowing down and savoring your food.
+        \nPay attention to your hunger and fullness cues. Eat when you're hungry and stop when you're satisfied, not necessarily when your plate is empty. Practice mindful eating by slowing down and savoring your food.
 
-        Maintaining good nutrition in a busy life is about making conscious choices and developing sustainable habits. Small changes can lead to significant improvements in your energy, mood, and overall health.
+        \nMaintaining good nutrition in a busy life is about making conscious choices and developing sustainable habits. Small changes can lead to significant improvements in your energy, mood, and overall health.
         ''',
     ),
   ];
-  // --- End Sample Data ---
 
   @override
   Widget build(BuildContext context) {

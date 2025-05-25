@@ -9,6 +9,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: darkBackgroundColor,
       appBar: AppBar(
         centerTitle: true,
         title: Text('Profile', style: GoogleFonts.nunito(color: Colors.white)),

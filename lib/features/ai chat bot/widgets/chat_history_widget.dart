@@ -13,8 +13,9 @@ class ChatHistoryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: secondaryColor,
       child: ListTile(
-        contentPadding: const EdgeInsets.only(left: 10.0, right: 10.0),
+        contentPadding: const EdgeInsets.all(15),
         leading: const CircleAvatar(
           backgroundColor: brandColor,
           radius: 30,

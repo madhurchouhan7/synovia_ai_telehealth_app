@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/hive/boxes.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/hive/chat_history.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/widgets/chat_history_widget.dart';
@@ -12,6 +13,7 @@ class ReportPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: darkBackgroundColor,
       appBar: AppBar(
         centerTitle: true,
         title: Text('Report', style: GoogleFonts.nunito(color: Colors.white)),

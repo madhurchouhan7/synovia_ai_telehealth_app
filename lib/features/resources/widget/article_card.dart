@@ -18,7 +18,7 @@ class ArticleCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(15),
       child: Container(
         width: screenWidth * 0.6, // Each card takes about 60% of screen width
-        margin: const EdgeInsets.only(right: 15), // Space between cards
+        margin: const EdgeInsets.only(right: 18), // Space between cards
         decoration: BoxDecoration(
           color: cardBackgroundColor, // A suitable background for the card
           borderRadius: BorderRadius.circular(15),
@@ -41,12 +41,12 @@ class ArticleCard extends StatelessWidget {
                 ),
                 child: Image.network(
                   article.imageUrl,
-                  height: 100, // Fixed height for card image
+                  height: screenWidth * 0.3, // Fixed height for card image
                   width: double.infinity,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
-                      height: 100,
+                      height: screenWidth * 0.3,
                       color: lightTextColor, // Placeholder for broken image
                       child: Center(
                         child: Icon(Icons.image, color: Colors.white54),
@@ -57,7 +57,7 @@ class ArticleCard extends StatelessWidget {
               ),
             const SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Text(
                 article.title,
                 maxLines: 2,
