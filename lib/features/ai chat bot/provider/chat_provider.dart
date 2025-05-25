@@ -86,6 +86,7 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+
   // load the messages from db
   Future<List<Message>> loadMessagesFromDB({required String chatId}) async {
     // open the box of this chatID
@@ -125,6 +126,7 @@ class ChatProvider extends ChangeNotifier {
       _model =
           _textModel ??
           GenerativeModel(
+            // gemini-2.0-flash
             model: setCurrentModel(newModel: 'gemini-2.0-flash'),
             apiKey: getApiKey(),
             generationConfig: GenerationConfig(
@@ -160,7 +162,7 @@ class ChatProvider extends ChangeNotifier {
   }
 
   String getApiKey() {
-    return dotenv.env['API_KEY'].toString();
+    return dotenv.env['GEMINI_API_KEY'].toString();
   }
 
   // set current page index

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/hive/chat_history.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/provider/chat_provider.dart';
 import 'package:synovia_ai_telehealth_app/utils/utilities.dart';
@@ -14,7 +15,11 @@ class ChatHistoryWidget extends StatelessWidget {
     return Card(
       child: ListTile(
         contentPadding: const EdgeInsets.only(left: 10.0, right: 10.0),
-        leading: const CircleAvatar(radius: 30, child: Icon(Icons.chat)),
+        leading: const CircleAvatar(
+          backgroundColor: brandColor,
+          radius: 30,
+          child: Icon(Icons.chat, color: Colors.black),
+        ),
         title: Text(chat.prompts, maxLines: 1),
         subtitle: Text(chat.response, maxLines: 2),
         trailing: const Icon(Icons.arrow_forward_ios),

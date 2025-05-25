@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
-import 'package:synovia_ai_telehealth_app/config/routes.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/auth/presentation/widgets/cta_button.dart';
 import 'package:synovia_ai_telehealth_app/features/comprehensive_health_assessment/presentation/widgets/health_assessment_content.dart';
@@ -29,8 +27,8 @@ class _HealthAssessmentPageState extends State<HealthAssessmentPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final fontSize = screenWidth / 600;
+    // final screenWidth = MediaQuery.of(context).size.width;
+    // final fontSize = screenWidth / 600;
 
     return SafeArea(
       child: Scaffold(

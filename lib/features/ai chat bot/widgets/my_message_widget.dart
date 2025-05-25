@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/models/message.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/widgets/preview_image_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';

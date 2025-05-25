@@ -11,8 +11,8 @@ import 'package:synovia_ai_telehealth_app/features/home/screens/report_page.dart
 import 'package:synovia_ai_telehealth_app/features/home/widget/ai_symptoms_checker.dart';
 import 'package:synovia_ai_telehealth_app/features/home/widget/chat_bot_widget.dart';
 import 'package:synovia_ai_telehealth_app/features/home/widget/find_nearby_doctors.dart';
-import 'package:synovia_ai_telehealth_app/features/home/widget/resources_article.dart';
 import 'package:synovia_ai_telehealth_app/features/home/widget/user_profile_card.dart';
+import 'package:synovia_ai_telehealth_app/features/resources/widget/resources_article.dart';
 import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
 
 class HomePage extends StatefulWidget {
@@ -98,6 +98,7 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
+                    SizedBox(height: 10),
                     ResourcesArticle(),
                   ],
                 ),

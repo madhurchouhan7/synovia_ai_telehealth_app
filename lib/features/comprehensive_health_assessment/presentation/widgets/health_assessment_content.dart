@@ -81,7 +81,7 @@ class HealthAssessmentController {
         curve: Curves.easeInOut,
       );
     } else {
-      // TODO: Navigate to home/login screen
+    
       print('Onboarding complete');
     }
   }

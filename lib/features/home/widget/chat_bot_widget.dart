@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:google_fonts/google_fonts.dart';
-import 'package:synovia_ai_telehealth_app/config/routes.dart';
+
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
-import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/screens/chat_page.dart';
-import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
 
 class ChatBotWidget extends StatelessWidget {
   final VoidCallback? onChatTap;

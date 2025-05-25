@@ -29,7 +29,7 @@ class _SignInPageState extends State<SignInPage> {
   @override
   void initState() {
     super.initState();
-    isObsecured = false;
+    isObsecured = true;
   }
 
   Future<void> _signInWithGoogle() async {

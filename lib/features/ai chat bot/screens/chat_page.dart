@@ -1,10 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/provider/chat_provider.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/widgets/bottom_chat_field.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/widgets/chat_message.dart';
+import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
 import 'package:synovia_ai_telehealth_app/utils/utilities.dart';
 
 class ChatPage extends StatefulWidget {
@@ -16,6 +19,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatPage> {
   // scroll controller
+
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -39,6 +43,12 @@ class _ChatScreenState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    final displayName = user?.displayName ?? 'User';
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final fontSize = screenWidth / 600;
+
     return Consumer<ChatProvider>(
       builder: (context, chatProvider, child) {
         if (chatProvider.inChatMessages.isNotEmpty) {
@@ -67,8 +77,9 @@ class _ChatScreenState extends State<ChatPage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: CircleAvatar(
+                    backgroundColor: brandColor,
                     child: IconButton(
-                      icon: const Icon(Icons.add),
+                      icon: const Icon(Icons.add, color: Colors.black),
                       onPressed: () async {
                         // show my animated dialog to start new chat
                         showMyAnimatedDialog(
@@ -100,8 +111,37 @@ class _ChatScreenState extends State<ChatPage> {
                   Expanded(
                     child:
                         chatProvider.inChatMessages.isEmpty
-                            ? const Center(
-                              child: Text('Start a new chat to see messages.'),
+                            ?
+                            // TODO : show a message when no chat messages are present
+                            Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(SvgAssets.welcome_logo),
+
+                                  SizedBox(height: screenWidth * 0.05),
+
+                                  Text(
+                                    'Hello, ${displayName.split(' ').first} ! 👋🏻',
+                                    style: GoogleFonts.nunito(
+                                      fontSize: fontSize * 40,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+
+                                  SizedBox(height: screenWidth * 0.02),
+
+                                  Text(
+                                    'How can I assist you today ?',
+                                    style: GoogleFonts.nunito(
+                                      fontSize: fontSize * 25,
+                                      color: lightTextColor,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             )
                             : ChatMessages(
                               scrollController: _scrollController,
