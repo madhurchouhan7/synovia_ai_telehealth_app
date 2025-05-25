@@ -14,6 +14,7 @@ import 'package:synovia_ai_telehealth_app/features/home/widget/find_nearby_docto
 import 'package:synovia_ai_telehealth_app/features/home/widget/user_profile_card.dart';
 import 'package:synovia_ai_telehealth_app/features/resources/widget/resources_article.dart';
 import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
+import 'package:synovia_ai_telehealth_app/features/home/animations/animated_entrance.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,25 +23,37 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   int _selectedIndex = 0;
-
   final List<Widget> _screens = [];
+  late UniqueKey _homeTabKey;
 
   @override
   void initState() {
     super.initState();
+    _homeTabKey = UniqueKey();
+    _buildScreens();
+  }
+
+  void _buildScreens() {
+    _screens.clear();
     _screens.addAll([
       // Home tab content
       Column(
+        key: _homeTabKey,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          UserProfileCard(
-            onProfileTap: () {
-              setState(() {
-                _selectedIndex = 4; // Profile tab index
-              });
-            },
+          // UserProfileCard slides down from top
+          AnimatedEntrance(
+            child: UserProfileCard(
+              onProfileTap: () {
+                setState(() {
+                  _selectedIndex = 4; // Profile tab index
+                });
+              },
+            ),
+            slideBegin: const Offset(0, -0.5), // Slide down from top
+            delay: const Duration(milliseconds: 500),
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -54,53 +67,90 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
-                      'AI Symptoms Checker',
-                      style: GoogleFonts.nunito(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
+                    // AI Symptoms Checker slides up
+                    AnimatedEntrance(
+                      child: Text(
+                        'AI Symptoms Checker',
+                        style: GoogleFonts.nunito(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
+                      slideBegin: const Offset(0, 0.5), // Slide up from bottom
+                      delay: const Duration(milliseconds: 500),
                     ),
-                    AiSymptomsChecker(),
-                    SizedBox(height: 15),
-                    Text(
-                      'AI ChatBot',
-                      style: GoogleFonts.nunito(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    ChatBotWidget(
-                      onChatTap: () {
-                        setState(() {
-                          _selectedIndex = 2; // Chat tab index
-                        });
-                      },
+                    AnimatedEntrance(
+                      child: AiSymptomsChecker(),
+                      slideBegin: const Offset(0, 0.5),
+                      delay: const Duration(milliseconds: 600),
                     ),
                     SizedBox(height: 15),
-                    Text(
-                      'Find Nearby Doctors',
-                      style: GoogleFonts.nunito(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
+                    // AI ChatBot slides in from left
+                    AnimatedEntrance(
+                      child: Text(
+                        'AI ChatBot',
+                        style: GoogleFonts.nunito(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
+                      slideBegin: const Offset(-0.5, 0), // Slide in from left
+                      delay: const Duration(milliseconds: 700),
+                    ),
+                    AnimatedEntrance(
+                      child: ChatBotWidget(
+                        onChatTap: () {
+                          setState(() {
+                            _selectedIndex = 2; // Chat tab index
+                          });
+                        },
+                      ),
+                      slideBegin: const Offset(-0.5, 0),
+                      delay: const Duration(milliseconds: 750),
+                    ),
+                    SizedBox(height: 15),
+                    // Find Nearby Doctors slides in from right
+                    AnimatedEntrance(
+                      child: Text(
+                        'Find Nearby Doctors',
+                        style: GoogleFonts.nunito(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      slideBegin: const Offset(0.5, 0), // Slide in from right
+                      delay: const Duration(milliseconds: 800),
                     ),
                     SizedBox(height: 10),
-                    FindNearbyDoctors(),
+                    AnimatedEntrance(
+                      child: FindNearbyDoctors(),
+                      slideBegin: const Offset(0.5, 0),
+                      delay: const Duration(milliseconds: 850),
+                    ),
                     SizedBox(height: 15),
-                    Text(
-                      'Resources and Articles',
-                      style: GoogleFonts.nunito(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
+                    // Resources and Articles fade in
+                    AnimatedEntrance(
+                      child: Text(
+                        'Resources and Articles',
+                        style: GoogleFonts.nunito(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
+                      slideBegin: Offset.zero,
+                      delay: const Duration(milliseconds: 900),
+                      // Only fade, no slide
                     ),
                     SizedBox(height: 10),
-                    ResourcesArticle(),
+                    AnimatedEntrance(
+                      child: ResourcesArticle(),
+                      slideBegin: Offset.zero,
+                      delay: const Duration(milliseconds: 1000),
+                    ),
                   ],
                 ),
               ),
@@ -115,6 +165,19 @@ class _HomePageState extends State<HomePage> {
       ReportPage(),
       ProfilePage(),
     ]);
+  }
+
+  @override
+  void didUpdateWidget(covariant HomePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // No-op, but you could trigger _buildScreens() here if needed
+  }
+
+  void _restartHomeTabAnimation() {
+    setState(() {
+      _homeTabKey = UniqueKey();
+      _buildScreens();
+    });
   }
 
   @override
@@ -144,6 +207,9 @@ class _HomePageState extends State<HomePage> {
             onTabChange: (index) {
               setState(() {
                 _selectedIndex = index;
+                if (index == 0) {
+                  _restartHomeTabAnimation();
+                }
               });
             },
             tabs: [

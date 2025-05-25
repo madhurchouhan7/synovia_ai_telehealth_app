@@ -12,7 +12,13 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: darkBackgroundColor,
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Profile', style: GoogleFonts.nunito(color: Colors.white)),
+        title: Text(
+          'Profile',
+          style: GoogleFonts.nunito(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         backgroundColor: Color(0xFF212C24),
       ),
       body: Center(

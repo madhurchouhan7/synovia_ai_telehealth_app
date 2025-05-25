@@ -11,7 +11,10 @@ class ProgressPage extends StatelessWidget {
         centerTitle: true,
         title: Text(
           'Progress',
-          style: GoogleFonts.nunito(color: Colors.white),
+          style: GoogleFonts.nunito(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
         ),
 
         backgroundColor: Color(0xFF212C24),

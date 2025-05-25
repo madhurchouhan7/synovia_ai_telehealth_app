@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:synovia_ai_telehealth_app/config/routes.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/resources/model/article.dart';
 import 'package:synovia_ai_telehealth_app/features/resources/screens/article_detail_screen.dart';
@@ -129,9 +130,7 @@ class ResourcesArticle extends StatelessWidget {
               // Navigate to the ArticleDetailScreen when a card is tapped
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => ArticleDetailScreen(article: article),
-                ),
+                pageRoute(ArticleDetailScreen(article: article)),
               );
             },
           );

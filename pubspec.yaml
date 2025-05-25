@@ -55,6 +55,8 @@ dependencies:
   flutter_spinkit:
   image_picker:
   flutter_dotenv:
+  cached_network_image: ^3.4.1
+  shimmer:
 
 dev_dependencies:
   flutter_test:

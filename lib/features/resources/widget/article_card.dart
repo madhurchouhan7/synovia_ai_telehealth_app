@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/resources/model/article.dart'; // Import your Article model
 
@@ -39,20 +41,41 @@ class ArticleCard extends StatelessWidget {
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(15),
                 ),
-                child: Image.network(
-                  article.imageUrl,
-                  height: screenWidth * 0.3, // Fixed height for card image
+                child: CachedNetworkImage(
+                  // <--- Replaced Image.network
+                  imageUrl: article.imageUrl,
+                  height: 100, // Fixed height for card image
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      height: screenWidth * 0.3,
-                      color: lightTextColor, // Placeholder for broken image
-                      child: Center(
-                        child: Icon(Icons.image, color: Colors.white54),
+                  placeholder:
+                      (context, url) => Shimmer.fromColors(
+                        // <--- SHIMMER EFFECT
+                        baseColor:
+                            Colors.grey[800]!, // Base color of the shimmer
+                        highlightColor:
+                            Colors.grey[700]!, // Highlight color of the shimmer
+                        child: Container(
+                          height: screenWidth * 0.3,
+                          width: double.infinity,
+                          color:
+                              Colors
+                                  .black54, // Color of the shimmering content area
+                        ),
                       ),
-                    );
-                  },
+                  errorWidget:
+                      (context, url, error) => Container(
+                        // <--- ERROR WIDGET
+                        height: screenWidth * 0.3,
+                        width: double.infinity,
+                        color: lightTextColor, // Placeholder for broken image
+                        child: Center(
+                          child: Icon(
+                            Icons.broken_image,
+                            color: Colors.white54,
+                            size: 40,
+                          ),
+                        ),
+                      ),
                 ),
               ),
             const SizedBox(height: 10),

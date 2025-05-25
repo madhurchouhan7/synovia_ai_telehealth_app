@@ -7,6 +7,7 @@ import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/provider/chat_provider.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/widgets/bottom_chat_field.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/widgets/chat_message.dart';
+import 'package:synovia_ai_telehealth_app/features/home/animations/animated_entrance.dart';
 import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
 import 'package:synovia_ai_telehealth_app/utils/utilities.dart';
 
@@ -70,7 +71,10 @@ class _ChatScreenState extends State<ChatPage> {
             centerTitle: true,
             title: Text(
               'Synovia AI Chat',
-              style: GoogleFonts.nunito(color: Colors.white),
+              style: GoogleFonts.nunito(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             actions: [
               if (chatProvider.inChatMessages.isNotEmpty)
@@ -111,13 +115,20 @@ class _ChatScreenState extends State<ChatPage> {
                   Expanded(
                     child:
                         chatProvider.inChatMessages.isEmpty
-                            ?
-                            // TODO : show a message when no chat messages are present
-                            Center(
+                            ? Center(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  SvgPicture.asset(SvgAssets.welcome_logo),
+                                  AnimatedEntrance(
+                                    child: SvgPicture.asset(
+                                      SvgAssets.welcome_logo,
+                                    ),
+                                    slideBegin: const Offset(
+                                      0,
+                                      0.5,
+                                    ), // Slide up from bottom
+                                    delay: const Duration(milliseconds: 500),
+                                  ),
 
                                   SizedBox(height: screenWidth * 0.05),
 

@@ -6,7 +6,7 @@ import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/hive/settings
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/hive/user_model.dart';
 
 class Boxes {
-  // get the caht history box
+  // get the chat history box
   static Box<ChatHistory> getChatHistory() =>
       Hive.box<ChatHistory>(Constants.chatHistoryBox);
 
