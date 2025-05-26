@@ -5,10 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/screens/chat_page.dart';
-import 'package:synovia_ai_telehealth_app/features/home/screens/profile_page.dart';
+import 'package:synovia_ai_telehealth_app/features/ai%20symptoms%20checker/widget/ai_symptoms_card.dart';
+import 'package:synovia_ai_telehealth_app/features/profile%20page/screens/profile_page.dart';
 import 'package:synovia_ai_telehealth_app/features/home/screens/progress_page.dart';
 import 'package:synovia_ai_telehealth_app/features/home/screens/report_page.dart';
-import 'package:synovia_ai_telehealth_app/features/home/widget/ai_symptoms_checker.dart';
 import 'package:synovia_ai_telehealth_app/features/home/widget/chat_bot_widget.dart';
 import 'package:synovia_ai_telehealth_app/features/home/widget/find_nearby_doctors.dart';
 import 'package:synovia_ai_telehealth_app/features/home/widget/user_profile_card.dart';
@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       delay: const Duration(milliseconds: 500),
                     ),
                     AnimatedEntrance(
-                      child: AiSymptomsChecker(),
+                      child: AiSymptomsCard(),
                       slideBegin: const Offset(0, 0.5),
                       delay: const Duration(milliseconds: 600),
                     ),
@@ -212,6 +212,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 }
               });
             },
+
             tabs: [
               GButton(
                 icon: Icons.home,

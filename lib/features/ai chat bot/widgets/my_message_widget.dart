@@ -19,53 +19,55 @@ class MyMessageWidget extends StatelessWidget {
 
     return Align(
       alignment: Alignment.centerRight,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Flexible(
-            child: Container(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.8,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(18),
-              ),
-              padding: const EdgeInsets.all(15),
-              margin: const EdgeInsets.only(bottom: 8),
-              child: Column(
-                children: [
-                  if (message.imagesUrls.isNotEmpty)
-                    PreviewImagesWidget(message: message),
-                  MarkdownBody(
-                    selectable: true,
-                    data: message.message.toString(),
-                    styleSheet: MarkdownStyleSheet(
-                      p: GoogleFonts.nunito(
-                        color: Colors.white,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
+      child: IntrinsicHeight(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.end, // <-- changed to end
+          children: [
+            Flexible(
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.8,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                padding: const EdgeInsets.all(15),
+                margin: const EdgeInsets.only(bottom: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    if (message.imagesUrls.isNotEmpty)
+                      PreviewImagesWidget(message: message),
+                    MarkdownBody(
+                      selectable: true,
+                      data: message.message.toString(),
+                      styleSheet: MarkdownStyleSheet(
+                        p: GoogleFonts.nunito(
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                      // You can style other markdown elements here as well
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: 8),
-          CircleAvatar(
-            radius: 20,
-            backgroundImage:
-                photoUrl.startsWith('http')
-                    ? NetworkImage(photoUrl)
-                    : NetworkImage(
-                      'https://img.freepik.com/free-photo/closeup-young-female-professional-making-eye-contact-against-colored-background_662251-651.jpg?semt=ais_hybrid&w=740',
-                    ),
-            backgroundColor: Colors.white,
-          ),
-        ],
+            const SizedBox(width: 8),
+            CircleAvatar(
+              radius: 20,
+              backgroundImage:
+                  photoUrl.startsWith('http')
+                      ? NetworkImage(photoUrl)
+                      : NetworkImage(
+                        'https://img.freepik.com/free-photo/closeup-young-female-professional-making-eye-contact-against-colored-background_662251-651.jpg?semt=ais_hybrid&w=740',
+                      ),
+              backgroundColor: Colors.white,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -57,6 +57,9 @@ dependencies:
   flutter_dotenv:
   cached_network_image: ^3.4.1
   shimmer:
+  geolocator: ^14.0.0
+  geoflutterfire_plus:
+  loading_animation_widget: ^1.3.0
 
 dev_dependencies:
   flutter_test:

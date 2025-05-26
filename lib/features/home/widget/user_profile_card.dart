@@ -138,31 +138,30 @@ class UserProfileCard extends StatelessWidget {
 
             // search bar
             SizedBox(height: screenWidth * 0.08),
-            Container(
-              height: screenWidth * 0.15,
-              width: screenWidth,
-              decoration: BoxDecoration(
-                color: Color(0xFF414B44),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Search',
-                        style: GoogleFonts.nunito(
-                          fontSize: 27 * fontSize,
-                          color: Color(0xFFA4A9A4),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SvgPicture.asset(SvgAssets.ic_search_bold),
-                    ],
-                  ),
+
+            TextFormField(
+              // controller: _emailController,
+              style: GoogleFonts.nunito(color: Colors.white),
+              key: ValueKey('email'),
+
+              decoration: InputDecoration(
+                fillColor: Color(0xFF414B44),
+                filled: true,
+                prefixIcon: Padding(
+                  padding: EdgeInsets.only(left: 15, right: 5),
+                  child: SvgPicture.asset(SvgAssets.ic_search_bold),
+                ),
+                hintText: "Search ",
+                hintStyle: GoogleFonts.nunito(
+                  color: Colors.white.withOpacity(0.6),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
             ),

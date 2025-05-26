@@ -52,4 +52,6 @@ class SvgAssets {
   static const String ic_search_bold = 'assets/icons/custom/ic_search_bold.svg';
 
   static const String ai_robot = 'assets/icons/custom/ai_robot.svg';
+
+  static const String ic_add = 'assets/icons/custom/ic_add.svg';
 }

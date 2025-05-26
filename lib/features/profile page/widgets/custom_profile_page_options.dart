@@ -1,0 +1,77 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:synovia_ai_telehealth_app/core/colors.dart';
+import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
+
+class CustomProfilePageOptions extends StatelessWidget {
+  final String text;
+  final String svgAsset;
+
+  CustomProfilePageOptions({
+    super.key,
+    required this.text,
+    required this.svgAsset,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final fontSize = MediaQuery.of(context).size.width / 600;
+    return Card(
+      color: secondaryColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // 1. Doctor's Image
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  // svg icon
+                  SvgPicture.asset(
+                    svgAsset,
+                    height: screenWidth * 0.09,
+                    color: Colors.white,
+                  ),
+
+                  SizedBox(width: screenWidth / 30),
+
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 1. Doctor's Name
+                      Text(
+                        text,
+                        style: GoogleFonts.nunito(
+                          color: Colors.white,
+                          fontSize: fontSize * 24,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            // 2. Doctor's Details icon
+            Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.rotationY(3.14),
+              child: SvgPicture.asset(
+                SvgAssets.left_back_icon,
+                // ignore: deprecated_member_use
+                color: Color(0xFFA4A9A4),
+                height: screenWidth * 0.05,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

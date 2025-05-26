@@ -108,11 +108,11 @@ class _ChatScreenState extends State<ChatPage> {
             ],
           ),
           body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Expanded(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child:
                         chatProvider.inChatMessages.isEmpty
                             ? Center(
@@ -123,15 +123,10 @@ class _ChatScreenState extends State<ChatPage> {
                                     child: SvgPicture.asset(
                                       SvgAssets.welcome_logo,
                                     ),
-                                    slideBegin: const Offset(
-                                      0,
-                                      0.5,
-                                    ), // Slide up from bottom
+                                    slideBegin: const Offset(0, 0.5),
                                     delay: const Duration(milliseconds: 500),
                                   ),
-
                                   SizedBox(height: screenWidth * 0.05),
-
                                   Text(
                                     'Hello, ${displayName.split(' ').first} ! 👋🏻',
                                     style: GoogleFonts.nunito(
@@ -140,9 +135,7 @@ class _ChatScreenState extends State<ChatPage> {
                                       fontWeight: FontWeight.w800,
                                     ),
                                   ),
-
                                   SizedBox(height: screenWidth * 0.02),
-
                                   Text(
                                     'How can I assist you today ?',
                                     style: GoogleFonts.nunito(
@@ -159,11 +152,16 @@ class _ChatScreenState extends State<ChatPage> {
                               chatProvider: chatProvider,
                             ),
                   ),
-
-                  // input field
-                  BottomChatField(chatProvider: chatProvider),
-                ],
-              ),
+                ),
+                // input field always visible at the bottom
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                    vertical: 8.0,
+                  ),
+                  child: BottomChatField(chatProvider: chatProvider),
+                ),
+              ],
             ),
           ),
         );

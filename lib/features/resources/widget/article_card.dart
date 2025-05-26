@@ -44,7 +44,7 @@ class ArticleCard extends StatelessWidget {
                 child: CachedNetworkImage(
                   // <--- Replaced Image.network
                   imageUrl: article.imageUrl,
-                  height: 100, // Fixed height for card image
+                  height: screenWidth * 0.3, // Fixed height for card image
                   width: double.infinity,
                   fit: BoxFit.cover,
                   placeholder:

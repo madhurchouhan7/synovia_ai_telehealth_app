@@ -4,9 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:synovia_ai_telehealth_app/config/routes.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/auth/presentation/screens/forgot_password_page.dart';
+import 'package:synovia_ai_telehealth_app/features/auth/presentation/screens/loading_screen.dart';
 import 'package:synovia_ai_telehealth_app/features/auth/presentation/screens/sign_up_page.dart';
 import 'package:synovia_ai_telehealth_app/features/auth/presentation/widgets/cta_button.dart';
 import 'package:synovia_ai_telehealth_app/features/auth/presentation/widgets/social_media_signin_button.dart';
+import 'package:synovia_ai_telehealth_app/features/home/home_page.dart';
 import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -32,6 +34,44 @@ class _SignInPageState extends State<SignInPage> {
     isObsecured = true;
   }
 
+  Future<void> _signInWithEmailPassword() async {
+    if (!_formKey.currentState!.validate()) return;
+    if (!mounted) return;
+    setState(() => _isLoading = true);
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+      if (mounted) {
+        Navigator.push(context, pageRoute(LoadingScreen()));
+        await Future.delayed(const Duration(seconds: 4));
+        if (mounted) {
+          // Use pushAndRemoveUntil to clear the stack and prevent returning to loading screen
+          Navigator.of(
+            context,
+          ).pushAndRemoveUntil(pageRoute(HomePage()), (route) => false);
+        }
+      }
+    } on FirebaseAuthException catch (e) {
+      String msg = 'Sign in failed';
+      if (e.code == 'user-not-found') msg = 'No user found for that email.';
+      if (e.code == 'wrong-password') msg = 'Wrong password provided.';
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(msg)));
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Sign in failed: $e')));
+      }
+    }
+    if (mounted) setState(() => _isLoading = false);
+  }
+
   Future<void> _signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -47,43 +87,25 @@ class _SignInPageState extends State<SignInPage> {
       await FirebaseAuth.instance.signInWithCredential(credential);
 
       if (mounted) {
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => PersonalizedHealthInsights()),
+          MaterialPageRoute(builder: (_) => const LoadingScreen()),
         );
+        await Future.delayed(const Duration(seconds: 3));
+        if (mounted) {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => HomePage()),
+            (route) => false,
+          );
+        }
       }
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Google sign-in failed: $e')));
-    }
-  }
-
-  Future<void> _signInWithEmailPassword() async {
-    if (!_formKey.currentState!.validate()) return;
-    setState(() => _isLoading = true);
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-      );
       if (mounted) {
-        Navigator.pushReplacement(
+        ScaffoldMessenger.of(
           context,
-          MaterialPageRoute(builder: (_) => PersonalizedHealthInsights()),
-        );
+        ).showSnackBar(SnackBar(content: Text('Google sign-in failed: $e')));
       }
-    } on FirebaseAuthException catch (e) {
-      String msg = 'Sign in failed';
-      if (e.code == 'user-not-found') msg = 'No user found for that email.';
-      if (e.code == 'wrong-password') msg = 'Wrong password provided.';
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Sign in failed: $e')));
     }
-    setState(() => _isLoading = false);
   }
 
   @override

@@ -62,6 +62,7 @@ class _ReportPageState extends State<ReportPage> with TickerProviderStateMixin {
               : Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListView.builder(
+                  reverse: true,
                   key: _reportTabKey,
                   physics: const BouncingScrollPhysics(),
                   shrinkWrap: true,

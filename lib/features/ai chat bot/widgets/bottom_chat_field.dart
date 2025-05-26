@@ -126,7 +126,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
                               }
                             },
                     decoration: InputDecoration.collapsed(
-                      hintText: 'Enter a prompt...',
+                      hintText: 'Write a prompt...',
                       hintStyle: GoogleFonts.nunito(fontSize: 16),
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
@@ -155,7 +155,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
                     color: brandColor,
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  margin: const EdgeInsets.all(5.0),
+                  margin: const EdgeInsets.all(10.0),
                   child: const Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Icon(
