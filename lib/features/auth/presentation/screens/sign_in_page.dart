@@ -45,7 +45,7 @@ class _SignInPageState extends State<SignInPage> {
       );
       if (mounted) {
         Navigator.push(context, pageRoute(LoadingScreen()));
-        await Future.delayed(const Duration(seconds: 4));
+        await Future.delayed(const Duration(seconds: 5));
         if (mounted) {
           // Use pushAndRemoveUntil to clear the stack and prevent returning to loading screen
           Navigator.of(
