@@ -54,4 +54,16 @@ class SvgAssets {
   static const String ai_robot = 'assets/icons/custom/ai_robot.svg';
 
   static const String ic_add = 'assets/icons/custom/ic_add.svg';
+
+  static const String ic_flag = 'assets/icons/custom/ic_flag.svg';
+  static const String ic_health_plus = 'assets/icons/custom/ic_health_plus.svg';
+  static const String ic_lock = 'assets/icons/custom/ic_lock.svg';
+  static const String ic_mobile = 'assets/icons/custom/ic_mobile.svg';
+  static const String ic_moon = 'assets/icons/custom/ic_moon.svg';
+  static const String ic_robotchat = 'assets/icons/custom/ic_robotchat.svg';
+  static const String ic_shield = 'assets/icons/custom/ic_shield.svg';
+  static const String ic_trash = 'assets/icons/custom/ic_trash.svg';
+  static const String ic_user = 'assets/icons/custom/ic_user.svg';
+  static const String ic_notification_bell =
+      'assets/icons/custom/ic_notification_bell.svg';
 }

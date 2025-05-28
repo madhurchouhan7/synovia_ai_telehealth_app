@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:synovia_ai_telehealth_app/config/routes.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/auth/presentation/screens/loading_screen.dart';
+import 'package:synovia_ai_telehealth_app/features/error/screens/no_internet_error.dart';
 import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
 
 class AiSymptomsCard extends StatelessWidget {
@@ -53,7 +54,7 @@ class AiSymptomsCard extends StatelessWidget {
                   onTap: () {
                     // Handle stethoscope icon tap
 
-                    Navigator.push(context, pageRoute(LoadingScreen()));
+                    Navigator.push(context, pageRoute(NoInternetError()));
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),

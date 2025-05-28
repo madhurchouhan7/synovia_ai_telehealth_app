@@ -25,13 +25,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   int _selectedIndex = 0;
-  final List<Widget> _screens = [];
+  late List<Widget> _screens = [];
   late UniqueKey _homeTabKey;
 
   @override
   void initState() {
     super.initState();
     _homeTabKey = UniqueKey();
+
     _buildScreens();
   }
 

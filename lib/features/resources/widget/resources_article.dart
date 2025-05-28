@@ -17,7 +17,7 @@ class ResourcesArticle extends StatelessWidget {
       description:
           'Discover how telehealth can improve your access to healthcare and provide convenient medical consultations from home.',
       imageUrl:
-          'https://sa1s3optim.patientpop.com/assets/images/provider/photos/2635379.jpg',
+          'https://media.npr.org/assets/img/2021/02/19/scott_kobner03_wide-fd05f3d15fbb710e3b0d1f63940134616c2987a6.jpg?s=1400&c=100&f=jpeg',
       content: '''
         Telehealth, also known as telemedicine, allows healthcare providers to deliver medical services remotely, often through video calls, phone calls, or secure messaging. This revolutionary approach has numerous benefits for both patients and providers.
 
@@ -48,7 +48,7 @@ class ResourcesArticle extends StatelessWidget {
       description:
           'Learn tips and tricks for maintaining physical and mental well-being while navigating a digitally-driven world.',
       imageUrl:
-          'https://i0.wp.com/mdforlives.com/blog/wp-content/uploads/2023/10/Mindfulness-in-the-Digital-Age-1024x581.jpg?resize=1024%2C581',
+          'https://media.istockphoto.com/id/509179588/photo/peaceful-meditation.jpg?s=612x612&w=0&k=20&c=uCgb3OPd8JQsj2V-HmvM8J_KUoqjaQ87dc6SYwgj47Q=',
       content: '''
         The digital age has brought unprecedented connectivity and convenience, but it also presents new challenges for our health. Spending prolonged hours in front of screens, the constant influx of information, and the blurring lines between work and personal life can take a toll on our physical and mental well-being. Here's how to stay healthy in this digitally-driven world.
 
@@ -82,12 +82,49 @@ class ResourcesArticle extends StatelessWidget {
       description:
           'Quick and easy ways to maintain a balanced diet even with a hectic schedule.',
       imageUrl:
-          'https://www.bigrockhq.com/wp-content/uploads/2019/01/13-Top-Nutrition-and-Lifestyle-Tips-to-Increase-Your-Productivity-at-Work-1080x675.jpg',
+          'https://blackwhite.pictures/media/t/2112/fruit-ripe-dish-meal-produce-vegetable-2172.jpg',
       content: '''
         In today's fast-paced world, maintaining a healthy and balanced diet often feels like an impossible task. Hectic schedules, long work hours, and the constant temptation of convenience foods can make it difficult to prioritize nutrition. However, with a few simple strategies, you can fuel your body effectively even when time is scarce.
 
         **1. Plan Ahead with Meal Prep:**
         \nDedicate a few hours each week to meal prepping. Cook large batches of grains, proteins, and vegetables that you can mix and match throughout the week. This minimizes decision fatigue during busy weekdays and ensures you have healthy options readily available.
+
+        **2. Keep Healthy Snacks Handy:**
+        \nAvoid unhealthy cravings by stocking up on nutritious snacks. Think fruits, nuts, seeds, yogurt, vegetable sticks with hummus, or whole-grain crackers. Keep them in your bag, car, and desk drawer.
+
+        **3. Prioritize Protein and Fiber:**
+        \nInclude a source of protein and fiber in every meal. Protein helps you feel full and satisfied, while fiber aids digestion and stabilizes blood sugar. Examples include lean meats, fish, beans, lentils, whole grains, fruits, and vegetables.
+
+        **4. Hydrate, Hydrate, Hydrate:**
+        \nOften, thirst is mistaken for hunger. Keep a water bottle with you throughout the day and sip regularly. Adequate hydration is crucial for energy levels, metabolism, and overall body function.
+
+        **5. Don't Skip Breakfast:**
+        \nBreakfast kickstarts your metabolism and provides energy for the day. Opt for quick and nutritious options like oatmeal with berries, Greek yogurt with granola, or a whole-wheat toast with avocado and egg.
+
+        **6. Be Mindful When Eating Out:**
+        \nIf dining out is unavoidable, make smart choices. Look for grilled or baked options, ask for sauces on the side, and don't be afraid to customize your order to include more vegetables. Control portion sizes.
+
+        **7. Listen to Your Body:**
+        \nPay attention to your hunger and fullness cues. Eat when you're hungry and stop when you're satisfied, not necessarily when your plate is empty. Practice mindful eating by slowing down and savoring your food.
+
+        \nMaintaining good nutrition in a busy life is about making conscious choices and developing sustainable habits. Small changes can lead to significant improvements in your energy, mood, and overall health.
+        ''',
+    ),
+
+    Article(
+      id: '4',
+      title: 'Obesity and overweight',
+      description:
+          'Obesity is a chronic complex disease defined by excessive fat deposits that can impair health. Obesity can lead to increased risk of type 2 diabetes and heart disease, it can affect bone health and reproduction, it increases the risk of certain cancers. Obesity influences the quality of living, such as sleeping or moving.',
+      imageUrl:
+          'https://i0.wp.com/post.medicalnewstoday.com/wp-content/uploads/sites/3/2021/04/GettyImages-1271322243_header2-1024x575.jpg?w=1155&h=1528',
+      content: '''
+        In today's fast-paced world, maintaining a healthy and balanced diet often feels like an impossible task. Hectic schedules, long work hours, and the constant temptation of convenience foods can make it difficult to prioritize nutrition. However, with a few simple strategies, you can fuel your body effectively even when time is scarce.
+
+        **Facts about overweight and obesity:**
+        \nIn 2022, 2.5 billion adults aged 18 years and older were overweight, including over 890 million adults who were living with obesity. This corresponds to 43% of adults aged 18 years and over (43% of men and 44% of women) who were overweight; an increase from 1990, when 25% of adults aged 18 years and over were overweight. Prevalence of overweight varied by region, from 31% in the WHO South-East Asia Region and the African Region to 67% in the Region of the Americas.
+
+
 
         **2. Keep Healthy Snacks Handy:**
         \nAvoid unhealthy cravings by stocking up on nutritious snacks. Think fruits, nuts, seeds, yogurt, vegetable sticks with hummus, or whole-grain crackers. Keep them in your bag, car, and desk drawer.

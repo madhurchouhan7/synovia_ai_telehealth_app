@@ -1,4 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
@@ -32,7 +35,7 @@ class ProfilePage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -78,13 +81,18 @@ class ProfilePage extends StatelessWidget {
               SizedBox(height: 70),
 
               // User details
-              Text(
-                user?.displayName ?? 'User Name',
-                style: GoogleFonts.nunito(
-                  color: Colors.white,
-                  fontSize: fontSize * 35,
-                  fontWeight: FontWeight.w700,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    user?.displayName ?? 'User Name',
+                    style: GoogleFonts.nunito(
+                      color: Colors.white,
+                      fontSize: fontSize * 38,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
               ),
 
               SizedBox(height: 10),
@@ -211,42 +219,188 @@ class ProfilePage extends StatelessWidget {
 
               // Custom profile page options
               Text(
-                'General',
+                '\tGeneral',
                 style: GoogleFonts.nunito(
                   color: Colors.white,
-                  fontSize: fontSize * 28,
+                  fontSize: fontSize * 25,
                   fontWeight: FontWeight.w700,
                 ),
               ),
 
               CustomProfilePageOptions(
                 text: 'Personal Information',
-                svgAsset: SvgAssets.ic_add,
+                child: SvgPicture.asset(SvgAssets.ic_user, color: Colors.white),
               ),
 
               CustomProfilePageOptions(
                 text: 'Medical History',
-                svgAsset: SvgAssets.ic_cal,
+                child: SvgPicture.asset(
+                  SvgAssets.ic_health_plus,
+                  color: Colors.white,
+                ),
               ),
 
               CustomProfilePageOptions(
-                text: 'Language',
-                svgAsset: SvgAssets.ic_cal,
+                text: 'Language Preference',
+                child: SvgPicture.asset(SvgAssets.ic_flag, color: Colors.white),
               ),
 
               CustomProfilePageOptions(
                 text: 'Dark Mode',
-                svgAsset: SvgAssets.ic_notification,
+                child: SvgPicture.asset(SvgAssets.ic_moon, color: Colors.white),
               ),
 
               CustomProfilePageOptions(
                 text: 'Liked Devices',
-                svgAsset: SvgAssets.ic_search_bold,
+                child: SvgPicture.asset(
+                  SvgAssets.ic_mobile,
+                  color: Colors.white,
+                ),
               ),
 
               CustomProfilePageOptions(
                 text: 'Smart Notifications',
-                svgAsset: SvgAssets.ic_notification,
+                child: SvgPicture.asset(
+                  SvgAssets.ic_notification_bell,
+                  color: Colors.white,
+                ),
+              ),
+
+              CustomProfilePageOptions(
+                text: 'Chatbot Preference',
+                child: SvgPicture.asset(
+                  SvgAssets.ic_robotchat,
+                  color: Colors.white,
+                ),
+              ),
+
+              SizedBox(height: 20),
+
+              Text(
+                '\tSecurity & Privacy',
+                style: GoogleFonts.nunito(
+                  color: Colors.white,
+                  fontSize: fontSize * 25,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+
+              CustomProfilePageOptions(
+                text: 'Privacy Policy',
+                child: SvgPicture.asset(
+                  SvgAssets.ic_shield,
+                  color: Colors.white,
+                ),
+              ),
+
+              CustomProfilePageOptions(
+                text: 'Security Settings',
+                child: SvgPicture.asset(SvgAssets.ic_lock, color: Colors.white),
+              ),
+
+              SizedBox(height: 20),
+
+              Text(
+                '\tDanger Zone',
+                style: GoogleFonts.nunito(
+                  color: Colors.white,
+                  fontSize: fontSize * 25,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+
+              Card(
+                color: Colors.red[900],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 12.0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // 1. Doctor's Image
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            // svg icon
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16.0),
+                                color: Colors.red[600],
+                              ),
+                              width: screenWidth / 8,
+                              height: screenWidth / 8,
+
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: SvgPicture.asset(
+                                  SvgAssets.ic_trash,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(width: screenWidth / 30),
+
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // 1. Doctor's Name
+                                Text(
+                                  'Close Account',
+                                  style: GoogleFonts.nunito(
+                                    color: Colors.white,
+                                    fontSize: fontSize * 24,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // 2. Doctor's Details icon
+                      Transform(
+                        alignment: Alignment.center,
+                        transform: Matrix4.rotationY(3.14),
+                        child: SvgPicture.asset(
+                          SvgAssets.left_back_icon,
+                          // ignore: deprecated_member_use
+                          color: Color(0xFFA4A9A4),
+                          height: screenWidth * 0.05,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              SizedBox(height: screenWidth / 10),
+
+              Center(
+                child: SvgPicture.asset(
+                  SvgAssets.logo_mark,
+                  height: screenWidth * 0.1,
+                ),
+              ),
+
+              SizedBox(height: screenWidth / 20),
+
+              Center(
+                child: Text(
+                  'Synovia AI Version 1.0.0',
+                  style: GoogleFonts.nunito(
+                    color: lightTextColor,
+                    fontSize: fontSize * 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
             ],
           ),
@@ -269,6 +423,7 @@ class ProfilePage extends StatelessWidget {
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(false),
+
                       child: Text(
                         'Cancel',
                         style: GoogleFonts.nunito(color: brandColor),

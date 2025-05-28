@@ -6,21 +6,22 @@ import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
 
 class CustomProfilePageOptions extends StatelessWidget {
   final String text;
-  final String svgAsset;
+  final Widget child;
 
   CustomProfilePageOptions({
     super.key,
     required this.text,
-    required this.svgAsset,
+    required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final fontSize = MediaQuery.of(context).size.width / 600;
+
     return Card(
       color: secondaryColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0)),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12.0),
         child: Row(
@@ -32,10 +33,18 @@ class CustomProfilePageOptions extends StatelessWidget {
               child: Row(
                 children: [
                   // svg icon
-                  SvgPicture.asset(
-                    svgAsset,
-                    height: screenWidth * 0.09,
-                    color: Colors.white,
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16.0),
+                      color: darkBackgroundColor,
+                    ),
+                    width: screenWidth / 8,
+                    height: screenWidth / 8,
+
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: child,
+                    ),
                   ),
 
                   SizedBox(width: screenWidth / 30),
