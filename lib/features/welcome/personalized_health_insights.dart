@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:synovia_ai_telehealth_app/config/routes.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/auth/presentation/widgets/cta_button.dart';
-import 'package:synovia_ai_telehealth_app/features/home/home_page.dart';
+import 'package:synovia_ai_telehealth_app/features/comprehensive_health_assessment/presentation/screens/health_assessment_page.dart';
 import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
 
 class PersonalizedHealthInsights extends StatelessWidget {
@@ -134,7 +134,7 @@ class PersonalizedHealthInsights extends StatelessWidget {
                 text: 'Get Started',
                 svgAssets: SvgAssets.solid_arrow_right_sm,
                 onTap: () {
-                  Navigator.push(context, pageRoute(HomePage()));
+                  Navigator.push(context, pageRoute(HealthAssessmentPage()));
                 },
               ),
             ],

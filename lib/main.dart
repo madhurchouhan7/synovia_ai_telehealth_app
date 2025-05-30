@@ -1,4 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/provider/chat_provider.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/provider/settings_provider.dart';
+import 'package:synovia_ai_telehealth_app/features/comprehensive_health_assessment/provider/health_assessment_controller.dart';
 import 'package:synovia_ai_telehealth_app/features/error/screens/no_internet_error.dart';
 import 'package:synovia_ai_telehealth_app/features/welcome/welcome_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,11 +23,19 @@ void main() async {
   await ChatProvider.initHive();
 
   await Firebase.initializeApp();
+
+  await FirebaseAppCheck.instance.activate(
+    androidProvider: AndroidProvider.debug,
+    appleProvider: AppleProvider.appAttest,
+  );
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ChatProvider()),
         ChangeNotifierProvider(create: (context) => SettingsProvider()),
+        ChangeNotifierProvider(
+          create: (context) => HealthAssessmentController(),
+        ),
       ],
       child: const MyApp(),
     ),
@@ -59,6 +69,7 @@ class _SplashAppState extends State<SplashApp> {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: WelcomePage(),
+
     );
   }
 }

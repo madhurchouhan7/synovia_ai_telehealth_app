@@ -52,12 +52,13 @@ class _ChatScreenState extends State<ChatPage> {
 
     return Consumer<ChatProvider>(
       builder: (context, chatProvider, child) {
-        if (chatProvider.inChatMessages.isNotEmpty) {
-          _scrollToBottom();
-        }
+        // Remove addListener from build to avoid performance issues
+        // if (chatProvider.inChatMessages.isNotEmpty) {
+        //   _scrollToBottom();
+        // }
 
-        // auto scroll to bottom on new message
-        chatProvider.addListener(() {
+        // Instead, use an effect to scroll after build
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           if (chatProvider.inChatMessages.isNotEmpty) {
             _scrollToBottom();
           }
@@ -67,7 +68,6 @@ class _ChatScreenState extends State<ChatPage> {
           backgroundColor: darkBackgroundColor,
           appBar: AppBar(
             backgroundColor: Color(0xFF212C24),
-
             centerTitle: true,
             title: Text(
               'Synovia AI Chat',
@@ -85,7 +85,6 @@ class _ChatScreenState extends State<ChatPage> {
                     child: IconButton(
                       icon: const Icon(Icons.add, color: Colors.black),
                       onPressed: () async {
-                        // show my animated dialog to start new chat
                         showMyAnimatedDialog(
                           context: context,
                           title: 'Start New Chat',
@@ -93,7 +92,6 @@ class _ChatScreenState extends State<ChatPage> {
                           actionText: 'Yes',
                           onActionPressed: (value) async {
                             if (value) {
-                              // prepare chat room
                               await chatProvider.prepareChatRoom(
                                 isNewChat: true,
                                 chatID: '',
@@ -153,7 +151,6 @@ class _ChatScreenState extends State<ChatPage> {
                             ),
                   ),
                 ),
-                // input field always visible at the bottom
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8.0,

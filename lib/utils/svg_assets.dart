@@ -66,4 +66,25 @@ class SvgAssets {
   static const String ic_user = 'assets/icons/custom/ic_user.svg';
   static const String ic_notification_bell =
       'assets/icons/custom/ic_notification_bell.svg';
+
+  static const String ic_head_heart = 'assets/icons/custom/ic_head_heart.svg';
+  static const String ic_pill = 'assets/icons/custom/ic_pill.svg';
+
+  static const String ic_weight_scale =
+      'assets/icons/custom/ic_weight_scale.svg';
+
+  static const String ic_gender_male = 'assets/icons/custom/ic_gender_male.svg';
+
+  static const String ic_gender_female =
+      'assets/icons/custom/ic_gender_female.svg';
+
+  static const String frame = 'assets/images/svg/frame.svg';
+
+  static const String patient = 'assets/images/svg/patient.svg';
+
+  static const String pills = 'assets/images/svg/pills.svg';
+
+  static const String alcohol_bottle = 'assets/images/svg/alcohol_bottle.svg';
+
+  static const String allergies = 'assets/images/svg/allergies.svg';
 }

@@ -8,7 +8,6 @@ import 'package:synovia_ai_telehealth_app/features/auth/presentation/screens/loa
 import 'package:synovia_ai_telehealth_app/features/auth/presentation/screens/sign_up_page.dart';
 import 'package:synovia_ai_telehealth_app/features/auth/presentation/widgets/cta_button.dart';
 import 'package:synovia_ai_telehealth_app/features/auth/presentation/widgets/social_media_signin_button.dart';
-import 'package:synovia_ai_telehealth_app/features/home/home_page.dart';
 import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -48,9 +47,10 @@ class _SignInPageState extends State<SignInPage> {
         await Future.delayed(const Duration(seconds: 5));
         if (mounted) {
           // Use pushAndRemoveUntil to clear the stack and prevent returning to loading screen
-          Navigator.of(
-            context,
-          ).pushAndRemoveUntil(pageRoute(HomePage()), (route) => false);
+          Navigator.of(context).pushAndRemoveUntil(
+            pageRoute(PersonalizedHealthInsights()),
+            (route) => false,
+          );
         }
       }
     } on FirebaseAuthException catch (e) {
@@ -94,7 +94,7 @@ class _SignInPageState extends State<SignInPage> {
         await Future.delayed(const Duration(seconds: 3));
         if (mounted) {
           Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => HomePage()),
+            MaterialPageRoute(builder: (_) => PersonalizedHealthInsights()),
             (route) => false,
           );
         }
@@ -144,7 +144,6 @@ class _SignInPageState extends State<SignInPage> {
                   textAlign: TextAlign.center,
                   style: GoogleFonts.nunito(
                     color: lightTextColor,
-
                     fontSize: 25 * fontSize,
                   ),
                 ),

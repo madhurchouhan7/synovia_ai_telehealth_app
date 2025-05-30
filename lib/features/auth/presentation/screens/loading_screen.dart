@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:synovia_ai_telehealth_app/core/colors.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});

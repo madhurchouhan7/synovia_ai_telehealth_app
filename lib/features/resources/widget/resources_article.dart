@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:synovia_ai_telehealth_app/config/routes.dart';
-import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/resources/model/article.dart';
 import 'package:synovia_ai_telehealth_app/features/resources/screens/article_detail_screen.dart';
 import 'package:synovia_ai_telehealth_app/features/resources/widget/article_card.dart'; // Import your new detail screen
