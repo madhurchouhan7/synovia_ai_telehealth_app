@@ -130,7 +130,7 @@ class ChatProvider extends ChangeNotifier {
             model: setCurrentModel(newModel: 'gemini-2.0-flash'),
             apiKey: getApiKey(),
             generationConfig: GenerationConfig(
-              temperature: 0.4,
+              temperature: 0.3,
               topK: 32,
               topP: 1,
               maxOutputTokens: 4096,
@@ -147,7 +147,7 @@ class ChatProvider extends ChangeNotifier {
             model: setCurrentModel(newModel: 'gemini-1.5-flash'),
             apiKey: getApiKey(),
             generationConfig: GenerationConfig(
-              temperature: 0.4,
+              temperature: 0.3,
               topK: 32,
               topP: 1,
               maxOutputTokens: 4096,

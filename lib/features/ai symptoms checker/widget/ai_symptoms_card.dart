@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:synovia_ai_telehealth_app/config/routes.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
-import 'package:synovia_ai_telehealth_app/features/comprehensive_health_assessment/presentation/screens/health_assessment_page.dart';
+import 'package:synovia_ai_telehealth_app/features/comprehensive_health_assessment/presentation/screens/disclaimer_screen.dart';
 import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
 
 class AiSymptomsCard extends StatelessWidget {
@@ -11,7 +11,7 @@ class AiSymptomsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    
     final fontSize = MediaQuery.of(context).size.width / 600;
     return Card(
       color: const Color(0xFF414B44),
@@ -50,7 +50,9 @@ class AiSymptomsCard extends StatelessWidget {
 
                 // stethoscope icon
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context, pageRoute(DisclaimerScreen()));
+                  },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SvgPicture.asset(SvgAssets.ic_add),

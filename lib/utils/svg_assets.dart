@@ -17,6 +17,8 @@ class SvgAssets {
 
   // SVG Pictures
   static const String ai_onboarding = 'assets/images/svg/ai_onboarding.svg';
+
+  static const String med_onboarding = 'assets/images/svg/med_onboarding.svg';
   static const String doctor_onboarding =
       'assets/images/svg/doctor_onboarding.svg';
   static const String health_assessment_onboarding =

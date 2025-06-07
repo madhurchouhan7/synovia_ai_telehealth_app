@@ -91,7 +91,7 @@ class _SignInPageState extends State<SignInPage> {
           context,
           MaterialPageRoute(builder: (_) => const LoadingScreen()),
         );
-        await Future.delayed(const Duration(seconds: 3));
+        await Future.delayed(const Duration(seconds: 6));
         if (mounted) {
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (_) => PersonalizedHealthInsights()),

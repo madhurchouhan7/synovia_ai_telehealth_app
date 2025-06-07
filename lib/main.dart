@@ -69,7 +69,6 @@ class _SplashAppState extends State<SplashApp> {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: WelcomePage(),
-
     );
   }
 }
