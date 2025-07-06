@@ -44,10 +44,12 @@ dependencies:
   firebase_auth:
   google_nav_bar:
   cloud_firestore: ^5.6.8
+  cloud_functions:
   google_sign_in: ^6.1.0
   intl:
   google_generative_ai:
   flutter_markdown:
+  http: ^1.4.0
   uuid:
   path_provider:
   hive:

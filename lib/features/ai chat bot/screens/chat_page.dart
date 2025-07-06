@@ -53,9 +53,9 @@ class _ChatScreenState extends State<ChatPage> {
     return Consumer<ChatProvider>(
       builder: (context, chatProvider, child) {
         // Remove addListener from build to avoid performance issues
-        // if (chatProvider.inChatMessages.isNotEmpty) {
-        //   _scrollToBottom();
-        // }
+        if (chatProvider.inChatMessages.isNotEmpty) {
+          _scrollToBottom();
+        }
 
         // Instead, use an effect to scroll after build
         WidgetsBinding.instance.addPostFrameCallback((_) {

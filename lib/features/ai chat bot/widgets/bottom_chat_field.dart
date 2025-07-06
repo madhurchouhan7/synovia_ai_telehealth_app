@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
+import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/models/message.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/provider/chat_provider.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/widgets/preview_image_widget.dart';
 import 'package:synovia_ai_telehealth_app/utils/utilities.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 
 class BottomChatField extends StatefulWidget {
   const BottomChatField({super.key, required this.chatProvider});
@@ -60,6 +63,101 @@ class _BottomChatFieldState extends State<BottomChatField> {
       widget.chatProvider.setImagesFileList(listValue: pickedImages);
     } catch (e) {
       log('error : $e');
+    }
+  }
+
+  Future<void> sendSymptomToFirebase(String message) async {
+    try {
+      widget.chatProvider.setLoading(value: true);
+
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        log('User not logged in');
+        return;
+      }
+
+      // Make sure user token is refreshed
+      await user.getIdToken(true);
+
+      // Set region to match your Cloud Function region
+      final functions = FirebaseFunctions.instanceFor(region: 'us-central1');
+
+      final response = await functions.httpsCallable('analyzeSymptoms').call({
+        'uid': user.uid,
+        'symptom': message,
+      });
+
+      final Map<String, dynamic> result = Map<String, dynamic>.from(
+        response.data,
+      );
+
+      final chatId = widget.chatProvider.getChatId();
+
+      final userMessage = Message(
+        messageId: DateTime.now().millisecondsSinceEpoch.toString(),
+        chatId: chatId,
+        role: Role.user,
+        message: StringBuffer(message),
+        timeSent: DateTime.now(),
+        imagesUrls: [],
+      );
+
+      // Create assistant message with thinking state
+      final assistantMessage = Message(
+        messageId:
+            DateTime.now()
+                .add(Duration(seconds: 1))
+                .millisecondsSinceEpoch
+                .toString(),
+        chatId: chatId,
+        role: Role.assistant,
+        message: StringBuffer(), // Empty for typing effect
+        timeSent: DateTime.now(),
+        imagesUrls: [],
+      );
+
+      // Add user message first
+      widget.chatProvider.inChatMessages.add(userMessage);
+      widget.chatProvider.setCurrentChatId(newChatId: chatId);
+      widget.chatProvider.notifyListeners();
+
+      // Add assistant message in thinking state
+      widget.chatProvider.inChatMessages.add(assistantMessage);
+      widget.chatProvider.notifyListeners();
+
+      // Simulate delay for better UX, then update with actual response
+      await Future.delayed(Duration(milliseconds: 500));
+
+      // Update assistant message with actual content
+      final responseText = '''Summary: ${result['summary']}
+
+Risk Level: ${result['risk_level']}
+Recommendations: ${result['recommendations']}
+Doctor Type: ${result['specialization']}''';
+
+      final index = widget.chatProvider.inChatMessages.indexWhere(
+        (msg) => msg.messageId == assistantMessage.messageId,
+      );
+
+      if (index != -1) {
+        widget.chatProvider.inChatMessages[index] = widget
+            .chatProvider
+            .inChatMessages[index]
+            .copyWith(message: StringBuffer(responseText));
+        widget.chatProvider.notifyListeners();
+      }
+    } catch (e) {
+      log("Error calling analyzeSymptoms: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to analyze symptoms. Please try again.'),
+        ),
+      );
+    } finally {
+      widget.chatProvider.setLoading(value: false);
+      textController.clear();
+      widget.chatProvider.setImagesFileList(listValue: []);
+      textFieldFocus.unfocus();
     }
   }
 

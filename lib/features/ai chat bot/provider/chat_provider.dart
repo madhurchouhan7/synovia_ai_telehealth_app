@@ -2,97 +2,89 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:image_picker/image_picker.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:synovia_ai_telehealth_app/features/ai%20symptoms%20checker/services/ai_service.dart';
+import 'package:uuid/uuid.dart';
+
+// --- Local Imports ---
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/constant.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/hive/boxes.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/hive/chat_history.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/hive/settings.dart';
-import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/hive/user_model.dart';
-import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/models/message.dart';
-import 'package:uuid/uuid.dart';
+import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/hive/user_model.dart'; // Assuming this is for app user data, not just chat user
+import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/models/message.dart'; // Your Message model
+
+// --- Firebase Cloud Functions Service Import ---
+// This is the file where you put the getPersonalizedMedicalAdvice function
+// Make sure the path is correct based on your project structure.
 
 class ChatProvider extends ChangeNotifier {
-  // list of messages
+  // list of messages displayed in the current chat
   final List<Message> _inChatMessages = [];
 
-  // page controller
+  // page controller (for multi-page UI, if applicable)
   final PageController _pageController = PageController();
 
-  // images file list
+  // images file list for multi-modal input
   List<XFile>? _imagesFileList = [];
 
-  // index of the current screen
+  // index of the current screen (if using PageView)
   int _currentIndex = 0;
 
-  // current chatId
+  // current active chat ID
   String _currentChatId = '';
 
-  // initialize generative model
-  GenerativeModel? _model;
+  // GenerativeModel instances for direct Gemini API calls (used for vision/image input)
+  GenerativeModel?
+  _model; // General model, will be vision model when images are present
+  GenerativeModel?
+  _textModel; // Specific for text-only direct calls (less used now)
+  GenerativeModel? _visionModel; // Specific for vision/multi-modal direct calls
 
-  // initialize text model
-  GenerativeModel? _textModel;
+  // current model type string
+  String _modelType =
+      'gemini-pro'; // Default for text-only, will be overridden for vision
 
-  // initialize vision model
-  GenerativeModel? _visionModel;
-
-  // current mode
-  String _modelType = 'gemini-pro';
-
-  // loading bool
+  // loading boolean to indicate AI processing
   bool _isLoading = false;
 
-  // getters
+  // --- Getters ---
   List<Message> get inChatMessages => _inChatMessages;
-
   PageController get pageController => _pageController;
-
   List<XFile>? get imagesFileList => _imagesFileList;
-
   int get currentIndex => _currentIndex;
-
   String get currentChatId => _currentChatId;
-
   GenerativeModel? get model => _model;
-
   GenerativeModel? get textModel => _textModel;
-
   GenerativeModel? get visionModel => _visionModel;
-
   String get modelType => _modelType;
-
   bool get isLoading => _isLoading;
 
-  // setters
+  // --- Setters / Initializers ---
 
-  // set inChatMessages
+  /// Sets the in-chat messages by loading them from Hive for a given chat ID.
   Future<void> setInChatMessages({required String chatId}) async {
-    // get messages from hive database
+    // Clear existing messages to load fresh history
+    _inChatMessages.clear();
     final messagesFromDB = await loadMessagesFromDB(chatId: chatId);
 
     for (var message in messagesFromDB) {
-      if (_inChatMessages.contains(message)) {
-        log('message already exists');
-        continue;
-      }
-
+      // Add messages from DB, avoiding duplicates if logic allows (though clear() prevents this)
       _inChatMessages.add(message);
     }
     notifyListeners();
   }
 
-
-  // load the messages from db
+  /// Loads messages from the Hive database for a specific chat ID.
   Future<List<Message>> loadMessagesFromDB({required String chatId}) async {
-    // open the box of this chatID
-    await Hive.openBox('${Constants.chatMessagesBox}$chatId');
-
-    final messageBox = Hive.box('${Constants.chatMessagesBox}$chatId');
+    // Open the box for this chatID
+    final messageBox = await Hive.openBox(
+      '${Constants.chatMessagesBox}$chatId',
+    );
 
     final newData =
         messageBox.keys.map((e) {
@@ -100,34 +92,38 @@ class ChatProvider extends ChangeNotifier {
           final messageData = Message.fromMap(
             Map<String, dynamic>.from(message),
           );
-
           return messageData;
         }).toList();
-    notifyListeners();
+    // No notifyListeners here, as setInChatMessages will call it after populating
     return newData;
   }
 
-  // set file list
+  /// Sets the list of selected images for multi-modal input.
   void setImagesFileList({required List<XFile> listValue}) {
     _imagesFileList = listValue;
     notifyListeners();
   }
 
-  // set the current model
+  /// Sets the current model type string.
   String setCurrentModel({required String newModel}) {
     _modelType = newModel;
     notifyListeners();
     return newModel;
   }
 
-  // function to set the model based on bool - isTextOnly
+  /// Initializes the appropriate GenerativeModel based on whether input is text-only or multi-modal.
+  /// This is primarily for direct Gemini API calls (e.g., for image input).
+  /// For personalized text-only responses, we will use the Cloud Function.
   Future<void> setModel({required bool isTextOnly}) async {
+    // Only initialize if the model is null to avoid unnecessary re-initialization
     if (isTextOnly) {
+      // If we decide to support direct text-only calls again, this would be used.
+      // For now, text-only goes through Cloud Function, so this part might be less critical.
       _model =
-          _textModel ??
-          GenerativeModel(
-            // gemini-2.0-flash
-            model: setCurrentModel(newModel: 'gemini-2.0-flash'),
+          _textModel ??= GenerativeModel(
+            model: setCurrentModel(
+              newModel: 'gemini-2.0-flash',
+            ), // Using gemini-pro for text
             apiKey: getApiKey(),
             generationConfig: GenerationConfig(
               temperature: 0.4,
@@ -141,10 +137,12 @@ class ChatProvider extends ChangeNotifier {
             ],
           );
     } else {
+      // This path is for multi-modal (text + image) input, which still uses direct Gemini API.
       _model =
-          _visionModel ??
-          GenerativeModel(
-            model: setCurrentModel(newModel: 'gemini-1.5-flash'),
+          _visionModel ??= GenerativeModel(
+            model: setCurrentModel(
+              newModel: 'gemini-2.0-flash',
+            ), // Using gemini-1.5-flash for vision
             apiKey: getApiKey(),
             generationConfig: GenerationConfig(
               temperature: 0.4,
@@ -161,152 +159,224 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Retrieves the API key from environment variables.
   String getApiKey() {
     return dotenv.env['GEMINI_API_KEY'].toString();
   }
 
-  // set current page index
+  /// Sets the current page index (for PageView).
   void setCurrentIndex({required int newIndex}) {
     _currentIndex = newIndex;
     notifyListeners();
   }
 
-  // set current chat id
+  /// Sets the current chat ID.
   void setCurrentChatId({required String newChatId}) {
     _currentChatId = newChatId;
     notifyListeners();
   }
 
-  // set loading
+  /// Sets the loading state.
   void setLoading({required bool value}) {
     _isLoading = value;
     notifyListeners();
   }
 
-  // delete chat
-  Future<void> deleteChatMessages({required String chatId}) async {
-    // 1. check if the box is open
-    if (!Hive.isBoxOpen('${Constants.chatMessagesBox}$chatId')) {
-      // open the box
-      await Hive.openBox('${Constants.chatMessagesBox}$chatId');
+  /// Gets the current chat loading state
+  bool get isLoadingChat => _isLoading;
 
-      // delete all messages in the box
-      await Hive.box('${Constants.chatMessagesBox}$chatId').clear();
+  /// Checks if the chat has any messages
+  bool get hasMessages => _inChatMessages.isNotEmpty;
 
-      // close the box
-      await Hive.box('${Constants.chatMessagesBox}$chatId').close();
-    } else {
-      // delete all messages in the box
-      await Hive.box('${Constants.chatMessagesBox}$chatId').clear();
+  /// Gets the last message in the chat
+  Message? get lastMessage =>
+      _inChatMessages.isNotEmpty ? _inChatMessages.last : null;
 
-      // close the box
-      await Hive.box('${Constants.chatMessagesBox}$chatId').close();
-    }
+  /// Clears all messages from current chat
+  void clearCurrentChat() {
+    _inChatMessages.clear();
+    setCurrentChatId(newChatId: '');
+    notifyListeners();
+  }
 
-    // get the current chatId, its its not empty
-    // we check if its the same as the chatId
-    // if its the same we set it to empty
-    if (currentChatId.isNotEmpty) {
-      if (currentChatId == chatId) {
-        setCurrentChatId(newChatId: '');
-        _inChatMessages.clear();
-        notifyListeners();
-      }
+  /// Updates a specific message by ID
+  void updateMessage(String messageId, Message updatedMessage) {
+    final index = _inChatMessages.indexWhere(
+      (msg) => msg.messageId == messageId,
+    );
+    if (index != -1) {
+      _inChatMessages[index] = updatedMessage;
+      notifyListeners();
     }
   }
 
-  // prepare chat room
+  /// Removes a message by ID
+  void removeMessage(String messageId) {
+    _inChatMessages.removeWhere((msg) => msg.messageId == messageId);
+    notifyListeners();
+  }
+
+  /// Deletes all messages for a given chat ID from Hive.
+  Future<void> deleteChatMessages({required String chatId}) async {
+    final boxName = '${Constants.chatMessagesBox}$chatId';
+    if (Hive.isBoxOpen(boxName)) {
+      await Hive.box(boxName).clear();
+      await Hive.box(boxName).close();
+    } else {
+      await Hive.openBox(boxName);
+      await Hive.box(boxName).clear();
+      await Hive.box(boxName).close();
+    }
+
+    // If the deleted chat is the currently active one, clear in-memory messages
+    if (currentChatId.isNotEmpty && currentChatId == chatId) {
+      setCurrentChatId(newChatId: '');
+      _inChatMessages.clear();
+      notifyListeners();
+    }
+  }
+
+  /// Prepares the chat room by loading history or clearing messages for a new chat.
   Future<void> prepareChatRoom({
     required bool isNewChat,
     required String chatID,
   }) async {
     if (!isNewChat) {
-      // 1.  load the chat messages from the db
-      final chatHistory = await loadMessagesFromDB(chatId: chatID);
-
-      // 2. clear the inChatMessages
-      _inChatMessages.clear();
-
-      for (var message in chatHistory) {
-        _inChatMessages.add(message);
-      }
-
-      // 3. set the current chat id
+      await setInChatMessages(chatId: chatID); // Load existing messages
       setCurrentChatId(newChatId: chatID);
     } else {
-      // 1. clear the inChatMessages
-      _inChatMessages.clear();
-
-      // 2. set the current chat id
+      _inChatMessages.clear(); // Clear for new chat
       setCurrentChatId(newChatId: chatID);
     }
+    notifyListeners(); // Notify after preparing the room
   }
 
-  // send message to gemini and get the streamed response
+  // --- Core Message Sending Logic (MODIFIED) ---
+
+  /// Sends a message to the AI and handles the response.
+  /// This method now branches based on `isTextOnly` to use either
+  /// the Cloud Function for personalized text responses or
+  /// direct Gemini API for multi-modal responses.
   Future<void> sentMessage({
     required String message,
     required bool isTextOnly,
   }) async {
-    // set the model
-    await setModel(isTextOnly: isTextOnly);
+    setLoading(value: true); // Set loading true at the start
 
-    // set loading
-    setLoading(value: true);
+    String chatId = getChatId(); // Get or generate chat ID
 
-    // get the chatId
-    String chatId = getChatId();
-
-    // list of history messages
-    List<Content> history = [];
-
-    // get the chat history
-    history = await getHistory(chatId: chatId);
-
-    // get the imagesUrls
-    List<String> imagesUrls = getImagesUrls(isTextOnly: isTextOnly);
-
-    // open the messages box
-    final messagesBox = await Hive.openBox(
-      '${Constants.chatMessagesBox}$chatId',
-    );
-
-    // get the last user message id
-    final userMessageId = messagesBox.keys.length;
-
-    // assistant messageId
-    final assistantMessageId = messagesBox.keys.length + 1;
-
-    // user message
+    // User message object
     final userMessage = Message(
-      messageId: userMessageId.toString(),
+      messageId: const Uuid().v4(), // Use UUID for unique message ID
       chatId: chatId,
       role: Role.user,
       message: StringBuffer(message),
-      imagesUrls: imagesUrls,
+      imagesUrls: getImagesUrls(isTextOnly: isTextOnly),
       timeSent: DateTime.now(),
     );
 
-    // add this message to the list on inChatMessages
-    _inChatMessages.add(userMessage);
+    _inChatMessages.add(userMessage); // Add user message to UI immediately
     notifyListeners();
 
     if (currentChatId.isEmpty) {
       setCurrentChatId(newChatId: chatId);
     }
 
-    // send the message to the model and wait for the response
-    await sendMessageAndWaitForResponse(
-      message: message,
-      chatId: chatId,
-      isTextOnly: isTextOnly,
-      history: history,
-      userMessage: userMessage,
-      modelMessageId: assistantMessageId.toString(),
-      messagesBox: messagesBox,
-    );
+    if (isTextOnly) {
+      // --- PERSONALIZED AI RESPONSE VIA CLOUD FUNCTION ---
+      final assistantMessageId = const Uuid().v4(); // Unique ID for AI message
+      final assistantMessagePlaceholder = Message(
+        messageId: assistantMessageId,
+        chatId: chatId,
+        role: Role.assistant,
+        message: StringBuffer('Thinking...'), // Placeholder text
+        imagesUrls: [],
+        timeSent: DateTime.now(),
+      );
+      _inChatMessages.add(assistantMessagePlaceholder);
+      notifyListeners();
+
+      try {
+        // Call the Cloud Function for personalized advice
+        final aiResponse = await getPersonalizedMedicalAdvice(message);
+
+        if (aiResponse['error'] != null) {
+          // Update the placeholder message with error
+          final index = _inChatMessages.indexWhere(
+            (msg) => msg.messageId == assistantMessageId,
+          );
+          if (index != -1) {
+            _inChatMessages[index] = _inChatMessages[index].copyWith(
+              message: StringBuffer('Error: ${aiResponse['error']}'),
+              isError: true,
+            );
+          }
+          log('Error from personalized AI: ${aiResponse['error']}');
+        } else {
+          // Update the placeholder message with the actual AI response
+          final index = _inChatMessages.indexWhere(
+            (msg) => msg.messageId == assistantMessageId,
+          );
+          if (index != -1) {
+            _inChatMessages[index] = _inChatMessages[index].copyWith(
+              message: StringBuffer(aiResponse['advice']),
+              severity: aiResponse['severity'], // Store the severity
+            );
+          }
+          log(
+            'Personalized AI response: ${aiResponse['advice']} (Severity: ${aiResponse['severity']})',
+          );
+
+          // Save messages to Hive DB
+          final messagesBox = await Hive.openBox(
+            '${Constants.chatMessagesBox}$chatId',
+          );
+          await saveMessagesToDB(
+            chatID: chatId,
+            userMessage: userMessage,
+            assistantMessage:
+                _inChatMessages[index], // Save the updated AI message
+            messagesBox: messagesBox,
+          );
+        }
+      } catch (e) {
+        log('Exception calling personalized AI: $e');
+        final index = _inChatMessages.indexWhere(
+          (msg) => msg.messageId == assistantMessageId,
+        );
+        if (index != -1) {
+          _inChatMessages[index] = _inChatMessages[index].copyWith(
+            message: StringBuffer('An unexpected error occurred.'),
+            isError: true,
+          );
+        }
+      } finally {
+        setLoading(value: false); // Always reset loading
+        notifyListeners();
+      }
+    } else {
+      // --- MULTI-MODAL (TEXT + IMAGE) AI RESPONSE VIA DIRECT GEMINI API ---
+      await setModel(isTextOnly: false); // Ensure vision model is initialized
+
+      List<Content> history = await getHistory(
+        chatId: chatId,
+      ); // Get chat history for context
+
+      await sendMessageAndWaitForResponse(
+        message: message,
+        chatId: chatId,
+        isTextOnly: false, // Explicitly false for this branch
+        history: history,
+        userMessage: userMessage,
+        modelMessageId: const Uuid().v4(), // New UUID for assistant message
+        messagesBox: await Hive.openBox('${Constants.chatMessagesBox}$chatId'),
+      );
+      // setLoading and notifyListeners are handled within sendMessageAndWaitForResponse for this path
+    }
   }
 
-  // send message to the model and wait for the response
+  /// Sends message to the direct Gemini model and waits for streamed response.
+  /// This method is now primarily used for multi-modal (text + image) input.
   Future<void> sendMessageAndWaitForResponse({
     required String message,
     required String chatId,
@@ -316,121 +386,151 @@ class ChatProvider extends ChangeNotifier {
     required String modelMessageId,
     required Box messagesBox,
   }) async {
-    // start the chat session - only send history is its text-only
+    // Ensure the model is ready for direct API calls (especially vision model)
+    if (_model == null) {
+      log('Error: Gemini model not initialized for direct API call.');
+      setLoading(value: false);
+      _inChatMessages.add(
+        Message(
+          messageId: const Uuid().v4(),
+          chatId: chatId,
+          role: Role.assistant,
+          message: StringBuffer(
+            'AI model not ready. Please try again or restart the app.',
+          ),
+          imagesUrls: [],
+          timeSent: DateTime.now(),
+          isError: true,
+        ),
+      );
+      notifyListeners();
+      return;
+    }
+
+    // Start the chat session - only send history if it's text-only (though here it's image)
+    // For vision models, history might not be fully supported or needed for single turn.
     final chatSession = _model!.startChat(
       history: history.isEmpty || !isTextOnly ? null : history,
     );
 
-    // get content
     final content = await getContent(message: message, isTextOnly: isTextOnly);
 
-    // assistant message
-    final assistantMessage = userMessage.copyWith(
+    // Assistant message placeholder
+    final assistantMessage = Message(
       messageId: modelMessageId,
+      chatId: chatId,
       role: Role.assistant,
-      message: StringBuffer(),
+      message: StringBuffer(), // Empty StringBuffer to append streamed text
+      imagesUrls: [], // AI won't return images in this context
       timeSent: DateTime.now(),
     );
 
-    // add this message to the list on inChatMessages
     _inChatMessages.add(assistantMessage);
     notifyListeners();
 
-    // wait for stream response
-    chatSession
-        .sendMessageStream(content)
-        .asyncMap((event) {
-          return event;
-        })
-        .listen(
-          (event) {
-            _inChatMessages
-                .firstWhere(
-                  (element) =>
-                      element.messageId == assistantMessage.messageId &&
-                      element.role.name == Role.assistant.name,
-                )
-                .message
-                .write(event.text);
-            log('event: ${event.text}');
-            notifyListeners();
-          },
-          onDone: () async {
-            log('stream done');
-            // save message to hive db
-            await saveMessagesToDB(
-              chatID: chatId,
-              userMessage: userMessage,
-              assistantMessage: assistantMessage,
-              messagesBox: messagesBox,
-            );
-            // set loading to false
-            setLoading(value: false);
-          },
-        )
-        .onError((error, stackTrace) {
-          log('error: $error');
-          // set loading
-          setLoading(value: false);
-        });
+    try {
+      // Listen for streamed response from direct Gemini API
+      await for (var event in chatSession.sendMessageStream(content)) {
+        if (event.text != null) {
+          _inChatMessages
+              .firstWhere(
+                (element) =>
+                    element.messageId == assistantMessage.messageId &&
+                    element.role.name == Role.assistant.name,
+              )
+              .message
+              .write(event.text);
+          log('Stream event: ${event.text}');
+          notifyListeners(); // Update UI with each chunk
+        }
+      }
+      log('Stream done for direct Gemini call.');
+
+      // After stream is done, save the complete message
+      await saveMessagesToDB(
+        chatID: chatId,
+        userMessage: userMessage,
+        assistantMessage: _inChatMessages.firstWhere(
+          (element) => element.messageId == assistantMessage.messageId,
+        ),
+        messagesBox: messagesBox,
+      );
+    } catch (error, stackTrace) {
+      log('Error during direct Gemini stream: $error\n$stackTrace');
+      // Update the assistant message with an error
+      final index = _inChatMessages.indexWhere(
+        (msg) => msg.messageId == assistantMessage.messageId,
+      );
+      if (index != -1) {
+        _inChatMessages[index] = _inChatMessages[index].copyWith(
+          message: StringBuffer(
+            'Error getting response from AI. Please try again.',
+          ),
+          isError: true,
+        );
+      }
+      notifyListeners();
+    } finally {
+      setLoading(value: false); // Reset loading
+      notifyListeners();
+    }
   }
 
-  // save messages to hive db
+  /// Saves user and assistant messages to Hive DB and updates chat history.
   Future<void> saveMessagesToDB({
     required String chatID,
     required Message userMessage,
     required Message assistantMessage,
     required Box messagesBox,
   }) async {
-    // save the user messages
+    // Save the user message
     await messagesBox.add(userMessage.toMap());
 
-    // save the assistant messages
+    // Save the assistant message
     await messagesBox.add(assistantMessage.toMap());
 
-    // save chat history with the same chatId
-    // if its already there update it
-    // if not create a new one
+    // Update chat history summary (for the chat list screen)
     final chatHistoryBox = Boxes.getChatHistory();
-
     final chatHistory = ChatHistory(
       chatId: chatID,
-      prompts: userMessage.message.toString(),
-      response: assistantMessage.message.toString(),
+      prompts: userMessage.message.toString(), // Store user's last prompt
+      response: assistantMessage.message.toString(), // Store AI's last response
       imageUrls: userMessage.imagesUrls,
       timestamp: DateTime.now(),
+      // You might want to save the severity here too if ChatHistory needs it
+      // severity: assistantMessage.severity,
     );
-    await chatHistoryBox.put(chatID, chatHistory);
+    await chatHistoryBox.put(
+      chatID,
+      chatHistory,
+    ); // Overwrites if chatID exists
 
-    // close the box
+    // Close the messages box (important for Hive)
     await messagesBox.close();
   }
 
+  /// Prepares Content object for Gemini API based on text-only or multi-modal input.
   Future<Content> getContent({
     required String message,
     required bool isTextOnly,
   }) async {
     if (isTextOnly) {
-      // generate text from text-only input
       return Content.text(message);
     } else {
-      // generate image from text and image input
       final imageFutures = _imagesFileList
           ?.map((imageFile) => imageFile.readAsBytes())
           .toList(growable: false);
-
       final imageBytes = await Future.wait(imageFutures!);
       final prompt = TextPart(message);
       final imageParts =
           imageBytes
               .map((bytes) => DataPart('image/jpeg', Uint8List.fromList(bytes)))
               .toList();
-
       return Content.multi([prompt, ...imageParts]);
     }
   }
 
-  // get y=the imagesUrls
+  /// Extracts image URLs from the selected image files.
   List<String> getImagesUrls({required bool isTextOnly}) {
     List<String> imagesUrls = [];
     if (!isTextOnly && imagesFileList != null) {
@@ -441,12 +541,14 @@ class ChatProvider extends ChangeNotifier {
     return imagesUrls;
   }
 
+  /// Retrieves chat history in Gemini's Content format for multi-turn conversations.
+  /// This is used for direct Gemini API calls (e.g., multi-modal chat).
   Future<List<Content>> getHistory({required String chatId}) async {
     List<Content> history = [];
     if (currentChatId.isNotEmpty) {
-      await setInChatMessages(chatId: chatId);
-
-      for (var message in inChatMessages) {
+      // Load messages from DB for the current chat
+      final messagesFromDB = await loadMessagesFromDB(chatId: chatId);
+      for (var message in messagesFromDB) {
         if (message.role == Role.user) {
           history.add(Content.text(message.message.toString()));
         } else {
@@ -454,10 +556,10 @@ class ChatProvider extends ChangeNotifier {
         }
       }
     }
-
     return history;
   }
 
+  /// Generates a new UUID for a chat ID if no current chat ID exists.
   String getChatId() {
     if (currentChatId.isEmpty) {
       return const Uuid().v4();
@@ -466,17 +568,15 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
-  // init Hive box
+  /// Initializes Hive boxes and registers adapters.
   static initHive() async {
     final dir = await path.getApplicationDocumentsDirectory();
     Hive.init(dir.path);
     await Hive.initFlutter(Constants.geminiDB);
 
-    // register adapters
+    // Register adapters and open boxes
     if (!Hive.isAdapterRegistered(0)) {
       Hive.registerAdapter(ChatHistoryAdapter());
-
-      // open the chat history box
       await Hive.openBox<ChatHistory>(Constants.chatHistoryBox);
     }
     if (!Hive.isAdapterRegistered(1)) {

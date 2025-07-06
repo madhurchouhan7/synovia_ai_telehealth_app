@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,6 +7,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/screens/chat_page.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20symptoms%20checker/widget/ai_symptoms_card.dart';
+import 'package:synovia_ai_telehealth_app/features/home/model/user.dart';
 import 'package:synovia_ai_telehealth_app/features/profile%20page/screens/profile_page.dart';
 import 'package:synovia_ai_telehealth_app/features/home/screens/progress_page.dart';
 import 'package:synovia_ai_telehealth_app/features/home/screens/report_page.dart';
@@ -32,9 +34,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _homeTabKey = UniqueKey();
-
+    checkCurrentUser();
     _buildScreens();
   }
+
+  void checkCurrentUser() {
+  firebase_auth.User? user = firebase_auth.FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    print('User is logged in: ${user.uid}');
+  } else {
+    print('No user is logged in.');
+  }
+}
 
   void _buildScreens() {
     _screens.clear();

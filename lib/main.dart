@@ -14,6 +14,7 @@ import 'package:synovia_ai_telehealth_app/features/comprehensive_health_assessme
 import 'package:synovia_ai_telehealth_app/features/error/screens/no_internet_error.dart';
 import 'package:synovia_ai_telehealth_app/features/welcome/welcome_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:synovia_ai_telehealth_app/firebase_options.dart';
 import 'features/home/home_page.dart';
 
 void main() async {
@@ -22,12 +23,26 @@ void main() async {
 
   await ChatProvider.initHive();
 
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  await FirebaseAppCheck.instance.activate(
-    androidProvider: AndroidProvider.debug,
-    appleProvider: AppleProvider.appAttest,
-  );
+  // await FirebaseAppCheck.instance.activate(
+  //   androidProvider: AndroidProvider.debug,
+  //   appleProvider: AppleProvider.debug,
+  // );
+
+  // try {
+  //   final debugToken = await FirebaseAppCheck.instance.getToken(true); // true to force refresh
+  //   if (debugToken != null) {
+  //     print('--- Firebase App Check Debug Token ---');
+  //     print(debugToken);
+  //     print('------------------------------------');
+  //   } else {
+  //     print('Firebase App Check Debug Token: Not available.');
+  //   }
+  // } catch (e) {
+  //   print('Error getting App Check debug token: $e');
+  // }
+
   runApp(
     MultiProvider(
       providers: [
@@ -69,7 +84,6 @@ class _SplashAppState extends State<SplashApp> {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: WelcomePage(),
-
     );
   }
 }
