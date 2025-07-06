@@ -27,15 +27,28 @@ Future<Map<String, dynamic>> getPersonalizedMedicalAdvice(
       'getPersonalizedMedicalAdvice',
     );
 
-    // Pass data directly for https.onCall
     final HttpsCallableResult result = await callable.call(<String, dynamic>{
       'symptoms': symptoms,
-      // No need to pass idToken explicitly for https.onCall
     });
 
-    // The result.data is directly the map returned by the function
     if (result.data is Map<String, dynamic>) {
-      return Map<String, dynamic>.from(result.data);
+      // Ensure the map contains the expected keys, including recommendedSpecialist
+      final Map<String, dynamic> responseData = Map<String, dynamic>.from(
+        result.data,
+      );
+      if (!responseData.containsKey('severity') ||
+          !responseData.containsKey('advice')) {
+        print(
+          'Flutter: Missing expected keys in Cloud Function response: $responseData',
+        );
+        return {'error': 'Incomplete AI response received.'};
+      }
+      // Add a check for recommendedSpecialist, provide default if missing
+      if (!responseData.containsKey('recommendedSpecialist')) {
+        responseData['recommendedSpecialist'] =
+            'General Physician'; // Default if not provided by function
+      }
+      return responseData; // Return the full map
     } else {
       print(
         'Flutter: Unexpected response format from Cloud Function: ${result.data}',

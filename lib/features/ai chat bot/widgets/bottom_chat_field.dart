@@ -20,13 +20,8 @@ class BottomChatField extends StatefulWidget {
 }
 
 class _BottomChatFieldState extends State<BottomChatField> {
-  // controller for the input field
   final TextEditingController textController = TextEditingController();
-
-  // focus node for the input field
   final FocusNode textFieldFocus = FocusNode();
-
-  // initialize image picker
   final ImagePicker _picker = ImagePicker();
 
   @override
@@ -41,18 +36,23 @@ class _BottomChatFieldState extends State<BottomChatField> {
     required ChatProvider chatProvider,
     required bool isTextOnly,
   }) async {
+    // --- CRITICAL FIX: Clear text and images immediately upon sending ---
+    textController.clear();
+    widget.chatProvider.setImagesFileList(listValue: []);
+    textFieldFocus.unfocus(); // Unfocus keyboard immediately
+    // --- END CRITICAL FIX ---
+
     try {
       await chatProvider.sentMessage(message: message, isTextOnly: isTextOnly);
     } catch (e) {
       log('error : $e');
-    } finally {
-      textController.clear();
-      widget.chatProvider.setImagesFileList(listValue: []);
-      textFieldFocus.unfocus();
     }
+    // The finally block is now mainly for error handling or other cleanup
+    // that might depend on the async call completing.
+    // For clearing text/images/unfocusing, it's better to do it immediately.
+    // No 'finally' block needed for clearing here anymore.
   }
 
-  // pick an image
   void pickImage() async {
     try {
       final pickedImages = await _picker.pickMultiImage(
@@ -66,6 +66,11 @@ class _BottomChatFieldState extends State<BottomChatField> {
     }
   }
 
+  // NOTE: This sendSymptomToFirebase method seems to be an old or alternative
+  // way of sending messages. Your primary send logic is in sendChatMessage
+  // which calls chatProvider.sentMessage.
+  // If this method is still in use, its clearing logic would also need adjustment.
+  // Assuming sendChatMessage is the main entry point for user input.
   Future<void> sendSymptomToFirebase(String message) async {
     try {
       widget.chatProvider.setLoading(value: true);
@@ -76,12 +81,8 @@ class _BottomChatFieldState extends State<BottomChatField> {
         return;
       }
 
-      // Make sure user token is refreshed
       await user.getIdToken(true);
-
-      // Set region to match your Cloud Function region
       final functions = FirebaseFunctions.instanceFor(region: 'us-central1');
-
       final response = await functions.httpsCallable('analyzeSymptoms').call({
         'uid': user.uid,
         'symptom': message,
@@ -102,7 +103,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
         imagesUrls: [],
       );
 
-      // Create assistant message with thinking state
       final assistantMessage = Message(
         messageId:
             DateTime.now()
@@ -111,24 +111,20 @@ class _BottomChatFieldState extends State<BottomChatField> {
                 .toString(),
         chatId: chatId,
         role: Role.assistant,
-        message: StringBuffer(), // Empty for typing effect
+        message: StringBuffer(),
         timeSent: DateTime.now(),
         imagesUrls: [],
       );
 
-      // Add user message first
       widget.chatProvider.inChatMessages.add(userMessage);
       widget.chatProvider.setCurrentChatId(newChatId: chatId);
       widget.chatProvider.notifyListeners();
 
-      // Add assistant message in thinking state
       widget.chatProvider.inChatMessages.add(assistantMessage);
       widget.chatProvider.notifyListeners();
 
-      // Simulate delay for better UX, then update with actual response
       await Future.delayed(Duration(milliseconds: 500));
 
-      // Update assistant message with actual content
       final responseText = '''Summary: ${result['summary']}
 
 Risk Level: ${result['risk_level']}
@@ -155,9 +151,10 @@ Doctor Type: ${result['specialization']}''';
       );
     } finally {
       widget.chatProvider.setLoading(value: false);
-      textController.clear();
-      widget.chatProvider.setImagesFileList(listValue: []);
-      textFieldFocus.unfocus();
+      // If this method is used, its clear logic should also be immediate
+      // textController.clear(); // Move this up if this method is the primary send
+      // widget.chatProvider.setImagesFileList(listValue: []); // Move this up
+      // textFieldFocus.unfocus(); // Move this up
     }
   }
 
@@ -183,7 +180,6 @@ Doctor Type: ${result['specialization']}''';
               IconButton(
                 onPressed: () {
                   if (hasImages) {
-                    // show the delete dialog
                     showMyAnimatedDialog(
                       context: context,
                       title: 'Delete Images',
@@ -202,7 +198,6 @@ Doctor Type: ${result['specialization']}''';
                 icon: Icon(hasImages ? Icons.delete_forever : Icons.image),
               ),
               const SizedBox(width: 5),
-
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.all(10),
@@ -215,7 +210,6 @@ Doctor Type: ${result['specialization']}''';
                             ? null
                             : (String value) {
                               if (value.isNotEmpty) {
-                                // send the message
                                 sendChatMessage(
                                   message: textController.text,
                                   chatProvider: widget.chatProvider,
@@ -240,7 +234,6 @@ Doctor Type: ${result['specialization']}''';
                         ? null
                         : () {
                           if (textController.text.isNotEmpty) {
-                            // send the message
                             sendChatMessage(
                               message: textController.text,
                               chatProvider: widget.chatProvider,

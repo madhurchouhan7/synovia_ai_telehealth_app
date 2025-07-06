@@ -2,7 +2,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
-const util = require('util'); // Import Node.js util module for deep inspection
+const util = require('util');
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -11,39 +11,39 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
 exports.getPersonalizedMedicalAdvice = functions.https.onCall(async (data, context) => {
-    // --- DEBUGGING SECTION (keep for now, but you can remove later) ---
-    console.log('Function: Raw incoming data object (util.inspect):', util.inspect(data, { depth: null }));
-    console.log('Function: Type of incoming data:', typeof data);
-    console.log('Function: Is data null or undefined?', data === null || typeof data === 'undefined');
-    if (data && typeof data === 'object') {
-        console.log('Function: Keys in incoming data:', Object.keys(data));
-        // Log the nested data object too
-        console.log('Function: Value of data.data (direct access):', data.data);
-        console.log('Function: Value of data.data.symptoms (direct access):', data.data ? data.data.symptoms : 'data.data is null/undefined');
-    } else {
-        console.log('Function: Incoming data is not an object or is null/undefined.');
+    console.log('CF: Function started. Incoming raw data object:', data);
+    console.log('CF: Auth context (from Firebase Functions):', JSON.stringify(context.auth));
+
+    const actualPayload = data.data || {};
+
+    let userId = context.auth ? context.auth.uid : null;
+
+    if (!userId && actualPayload.idToken) {
+        try {
+            const decodedToken = await admin.auth().verifyIdToken(actualPayload.idToken);
+            userId = decodedToken.uid;
+            console.log('CF: Successfully verified ID token from payload. User ID:', userId);
+        } catch (error) {
+            console.error('CF: Failed to verify ID token from payload:', error);
+            userId = null;
+        }
     }
-    // --- END DEBUGGING SECTION ---
 
-    // Temporarily keep the userId bypass for now
-    const userId = context.auth ? context.auth.uid : 'DEBUG_ANONYMOUS_USER';
-    console.log('Function: Using userId:', userId);
+    if (userId === null) {
+        userId = 'DEBUG_ANONYMOUS_USER';
+        console.warn('CF: No authenticated user context or valid ID token found. Using DEBUG_ANONYMOUS_USER.');
+    } else {
+        console.log('CF: Determined userId:', userId);
+    }
 
-    // --- CRITICAL FIX: Access symptoms from data.data.symptoms ---
     let userSymptoms;
-    if (data && typeof data === 'object' && data.data && typeof data.data === 'object' && typeof data.data.symptoms === 'string') {
-        userSymptoms = data.data.symptoms.trim();
-        console.log('Function: Extracted symptoms from data.data.symptoms:', userSymptoms);
+    if (actualPayload && typeof actualPayload === 'object' && typeof actualPayload.symptoms === 'string') {
+        userSymptoms = actualPayload.symptoms.trim();
     } else {
-        console.warn('Function: Data object does not contain expected nested "data.symptoms" string.');
-        userSymptoms = 'unknown or unreadable symptoms'; // Fallback
-    }
-
-    if (!userSymptoms || userSymptoms === 'unknown or unreadable symptoms') {
-        console.warn('Function: Final userSymptoms determined to be invalid or missing.');
+        console.error('CF: Payload does not contain expected "symptoms" string. Actual payload:', JSON.stringify(actualPayload));
         throw new functions.https.HttpsError('invalid-argument', 'Missing or invalid symptoms provided.');
     }
-    console.log('Function: Final userSymptoms determined for prompt:', userSymptoms);
+    console.log('CF: Final userSymptoms determined for prompt:', userSymptoms);
 
 
     let userData = {};
@@ -52,19 +52,18 @@ exports.getPersonalizedMedicalAdvice = functions.https.onCall(async (data, conte
             const userDoc = await db.collection('users').doc(userId).get();
             if (userDoc.exists) {
                 userData = userDoc.data();
-                console.log('Function: User data fetched successfully for UID:', userId);
+                console.log('CF: User data fetched successfully for UID:', userId, 'Data:', JSON.stringify(userData));
             } else {
-                console.warn(`Function: User data not found for userId: ${userId}`);
+                console.warn(`CF: User data not found for userId: ${userId}`);
             }
         } else {
-            console.warn('Function: Using dummy user data for unauthenticated call.');
+            console.warn('CF: Using dummy user data for unauthenticated call.');
         }
     } catch (error) {
-        console.error('Function: Error fetching user data:', error);
+        console.error('CF: Error fetching user data:', error);
         throw new functions.https.HttpsError('internal', 'Failed to retrieve user data.');
     }
 
-    // ... rest of your prompt construction and Gemini API call ...
     let fullPrompt = `You are a highly empathetic and knowledgeable medical AI assistant. Your primary goal is to classify user-provided symptoms into 'low', 'mild', or 'risky' categories and provide appropriate, personalized advice. Always prioritize patient safety.
 
     User's Personal Health Data:
@@ -74,23 +73,25 @@ exports.getPersonalizedMedicalAdvice = functions.https.onCall(async (data, conte
     Allergies: ${userData.allergies && userData.allergies.length > 0 ? userData.allergies.join(', ') : 'none'}
     Current Medications: ${userData.medications && userData.medications.length > 0 ? userData.medications.join(', ') : 'none'}
     Lifestyle Notes: ${userData.lifestyle || 'none'}
-    // Add more relevant fields from your Firestore user data
 
     User's Symptoms: "${userSymptoms}"
 
-    Based on the user's personal health data and the symptoms provided, please:
-    1. Classify the severity of these symptoms into 'low', 'mild', or 'risky'. Provide the classification clearly.
-    2. Explain your reasoning briefly.
-    3. Provide personalized advice based on the severity.
-    4. Do NOT give definitive diagnoses. Always advise consulting a medical professional.
-    5. Keep the response concise but informative.
+    Based on the user's personal health data and the symptoms provided, please provide your response in the following structured format:
+
+    **Classification:** [low/mild/risky]
+    **Reasoning:** [Brief explanation for classification]
+    **RecommendedSpecialist:** [Type of doctor/specialist, e.g., General Physician, Orthopedic Surgeon, Cardiologist, Dermatologist, Neurologist, Dentist, Ophthalmologist. If unsure or low severity, suggest 'General Physician'. Be specific if the symptoms strongly indicate a particular field. Provide only the primary specialist type, without additional descriptions or parentheses.]
+    **Advice:** [Personalized advice based on severity. Include the phrase "I have added nearby doctors for that." at the end of your advice if a specialist is recommended.]
+
+    Do NOT give definitive diagnoses. Always advise consulting a medical professional. Keep the response concise but informative.
     `;
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
     try {
         const result = await model.generateContent(fullPrompt);
         const response = result.response;
         const text = response.text();
+        console.log('CF: Raw Gemini response text:', text);
 
         let classification = 'unknown';
         const classificationMatch = text.match(/Classification:\s*(low|mild|risky)/i);
@@ -106,24 +107,62 @@ exports.getPersonalizedMedicalAdvice = functions.https.onCall(async (data, conte
             }
         }
 
-        if (userId !== 'DEBUG_ANONYMOUS_USER') {
-            await db.collection('users').doc(userId).update({
-                activeSymptomSeverity: classification,
-                lastSymptoms: userSymptoms,
-                lastAiResponse: text,
-                updatedAt: admin.firestore.FieldValue.serverTimestamp()
-            }, { merge: true });
+        let recommendedSpecialist = 'General Physician';
+        const specialistMatch = text.match(/RecommendedSpecialist:\s*([^\n]+)/i);
+        if (specialistMatch && specialistMatch[1]) {
+            recommendedSpecialist = specialistMatch[1].trim();
+            // --- CRITICAL FIX: More robust cleaning for specialist name ---
+            recommendedSpecialist = recommendedSpecialist
+                .replace(/^\*+\s*/, '') // Remove leading asterisks (e.g., "** Dentist")
+                .replace(/\s*\(.*?\)\s*$/, '') // Remove anything in parentheses (e.g., "(Optometrist may also be beneficial.")
+                .replace(/\.$/, '') // Remove trailing periods
+                .trim(); // Final trim
+
+            console.log('CF: Extracted RecommendedSpecialist (cleaned):', recommendedSpecialist); // <--- UPDATED LOG
         } else {
-            console.warn('Function: Skipped Firestore update for DEBUG_ANONYMOUS_USER.');
+            console.warn('CF: Could not explicitly extract RecommendedSpecialist from Gemini response. Attempting fallback.');
+            if (userSymptoms.toLowerCase().includes('tooth') || userSymptoms.toLowerCase().includes('gum') || userSymptoms.toLowerCase().includes('dental')) {
+                recommendedSpecialist = 'Dentist';
+            } else if (userSymptoms.toLowerCase().includes('eye') || userSymptoms.toLowerCase().includes('vision')) { // Added fallback for eye symptoms
+                recommendedSpecialist = 'Ophthalmologist';
+            } else if (classification === 'risky' && userSymptoms.toLowerCase().includes('chest pain')) {
+                recommendedSpecialist = 'Cardiologist';
+            } else if (classification === 'risky' && (userSymptoms.toLowerCase().includes('broken') || userSymptoms.toLowerCase().includes('fracture') || userSymptoms.toLowerCase().includes('bone'))) {
+                recommendedSpecialist = 'Orthopedic Surgeon';
+            } else if (classification === 'risky' && (userSymptoms.toLowerCase().includes('headache') || userSymptoms.toLowerCase().includes('dizziness') || userSymptoms.toLowerCase().includes('numbness'))) {
+                recommendedSpecialist = 'Neurologist';
+            } else if (classification === 'mild' && (userSymptoms.toLowerCase().includes('rash') || userSymptoms.toLowerCase().includes('skin'))) {
+                recommendedSpecialist = 'Dermatologist';
+            }
+            console.log('CF: Fallback RecommendedSpecialist:', recommendedSpecialist);
+        }
+
+        if (userId && userId !== 'DEBUG_ANONYMOUS_USER') {
+            console.log(`CF: Attempting to update Firestore for user: ${userId} with recommendedSpecialist: ${recommendedSpecialist}`);
+            try {
+                await db.collection('users').doc(userId).update({
+                    activeSymptomSeverity: classification,
+                    lastSymptoms: userSymptoms,
+                    lastAiResponse: text,
+                    recommendedSpecialist: recommendedSpecialist,
+                    updatedAt: admin.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+                console.log('CF: Firestore update successful for user:', userId);
+            } catch (firestoreError) {
+                console.error('CF: ERROR during Firestore update for user:', userId, 'Error:', firestoreError);
+            }
+        } else {
+            console.warn('CF: Skipped Firestore update because no valid authenticated user ID was found.');
         }
 
         return {
             severity: classification,
-            advice: text
+            advice: text,
+            recommendedSpecialist: recommendedSpecialist
         };
 
     } catch (error) {
-        console.error('Function: Error calling Gemini API:', error);
+        console.error('CF: Error calling Gemini API or processing response:', error);
         throw new functions.https.HttpsError('internal', 'Failed to get personalized advice from AI.');
     }
 });

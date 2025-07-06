@@ -6,7 +6,7 @@ import 'package:synovia_ai_telehealth_app/core/colors.dart';
 
 class ChatBotWidget extends StatelessWidget {
   final VoidCallback? onChatTap;
-  const ChatBotWidget({super.key, this.onChatTap});
+  const ChatBotWidget({super.key, required this.onChatTap});
 
   @override
   Widget build(BuildContext context) {

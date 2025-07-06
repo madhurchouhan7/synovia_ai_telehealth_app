@@ -10,7 +10,8 @@ class DoctorCard extends StatelessWidget {
   final String doctorRating;
   final String doctorTiming;
   final String doctorImageUrl;
-  
+  final String? phoneNumber;
+  final List<String>? openingHours;
 
   DoctorCard({
     super.key,
@@ -19,12 +20,17 @@ class DoctorCard extends StatelessWidget {
     required this.doctorRating,
     required this.doctorTiming,
     required this.doctorImageUrl,
-    
+    this.phoneNumber,
+    this.openingHours,
   });
 
-  // This widget represents a card displaying doctor's information.
-
-  // on tap, navigate to doctor's details page
+  String _formatOpeningHours(List<String>? hours) {
+    if (hours == null || hours.isEmpty) {
+      return 'Hours not available';
+    }
+    // For simplicity, just show the first line or a summary
+    return hours.join('\n'); // Join all lines for full display
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,60 +45,80 @@ class DoctorCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             // 1. Doctor's Image
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: screenWidth / 13,
-                    backgroundImage: NetworkImage(doctorImageUrl),
-                  ),
-                  SizedBox(width: screenWidth / 30),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: screenWidth / 13,
+                      backgroundImage: NetworkImage(doctorImageUrl),
+                    ),
+                    SizedBox(width: screenWidth / 30),
 
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // 1. Doctor's Name
-                      Text(
-                        doctorName,
-                        style: GoogleFonts.nunito(
-                          color: Colors.white,
-                          fontSize: fontSize * 28,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // 1. Doctor's Name
+                          Text(
+                            doctorName,
+                            overflow: TextOverflow.clip,
+                            style: GoogleFonts.nunito(
+                              color: Colors.white,
+                              fontSize: fontSize * 28,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
+                          SizedBox(height: screenWidth / 60),
+
+                          // 2. Doctor's Specialization
+                          Text(
+                            '🩺 ${doctorSpecialization}',
+                            overflow: TextOverflow.clip,
+                            style: GoogleFonts.nunito(
+                              color: lightTextColor,
+                              fontSize: fontSize * 20,
+                            ),
+                          ),
+
+                          // 3. Doctor's Rating
+                          Text(
+                            '⭐ ${doctorRating}',
+                            overflow: TextOverflow.clip,
+                            style: GoogleFonts.nunito(
+                              color: lightTextColor,
+                              fontSize: fontSize * 20,
+                            ),
+                          ),
+                          
+                          if (phoneNumber != null && phoneNumber!.isNotEmpty)
+                            Text(
+                              '📞 ${phoneNumber!}',
+                              style: GoogleFonts.nunito(
+                                color: lightTextColor,
+                                fontSize: fontSize * 20,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          // <--- NEW: Display Opening Hours ---
+                          Text(
+                            '🕒 ${_formatOpeningHours(openingHours)}', // Use the helper
+                            style: GoogleFonts.nunito(
+                              color: lightTextColor,
+                              fontSize: fontSize * 20,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2, // Allow more lines for hours
+                          ),
+                         
+                        ],
                       ),
-
-                      SizedBox(height: screenWidth / 60),
-
-                      // 2. Doctor's Specialization
-                      Text(
-                        '🩺 ${doctorSpecialization}',
-                        style: GoogleFonts.nunito(
-                          color: lightTextColor,
-                          fontSize: fontSize * 20,
-                        ),
-                      ),
-
-                      // 3. Doctor's Rating
-                      Text(
-                        '⭐ ${doctorRating}',
-                        style: GoogleFonts.nunito(
-                          color: lightTextColor,
-                          fontSize: fontSize * 20,
-                        ),
-                      ),
-
-                      // 4. Doctor's timing
-                      Text(
-                        '🕛 ${doctorTiming}',
-                        style: GoogleFonts.nunito(
-                          color: lightTextColor,
-                          fontSize: fontSize * 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             ),
 

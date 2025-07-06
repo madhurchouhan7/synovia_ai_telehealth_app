@@ -51,6 +51,7 @@ class ChatProvider extends ChangeNotifier {
 
   // loading boolean to indicate AI processing
   bool _isLoading = false;
+  final AIService _aiService = AIService();
 
   // --- Getters ---
   List<Message> get inChatMessages => _inChatMessages;
@@ -298,7 +299,7 @@ class ChatProvider extends ChangeNotifier {
 
       try {
         // Call the Cloud Function for personalized advice
-        final aiResponse = await getPersonalizedMedicalAdvice(message);
+        final aiResponse = await _aiService.getPersonalizedMedicalAdvice(message);
 
         if (aiResponse['error'] != null) {
           // Update the placeholder message with error
