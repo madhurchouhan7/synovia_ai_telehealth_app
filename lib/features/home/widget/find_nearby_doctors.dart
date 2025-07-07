@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
-import 'package:synovia_ai_telehealth_app/features/find%20nearby%20doctors/widgets/doctor_card.dart';
 
 class FindNearbyDoctors extends StatelessWidget {
   const FindNearbyDoctors({super.key});
@@ -60,7 +59,6 @@ class FindNearbyDoctors extends StatelessWidget {
             ),
 
             const SizedBox(height: 6.0),
-
           ],
         ),
       ),

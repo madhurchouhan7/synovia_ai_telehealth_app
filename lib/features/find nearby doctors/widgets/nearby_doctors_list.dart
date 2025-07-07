@@ -1,7 +1,7 @@
 // lib/widgets/nearby_doctors_list.dart
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/find%20nearby%20doctors/models/doctor_model.dart';
 import 'package:synovia_ai_telehealth_app/features/find%20nearby%20doctors/services/doctor_search_service.dart';
@@ -63,12 +63,23 @@ class _NearbyDoctorsListState extends State<NearbyDoctorsList> {
     // Determine the content to display below the header based on loading/error/data
     Widget contentWidget;
     if (widget.isLoading) {
+      final screenWidth = MediaQuery.of(context).size.width;
       contentWidget = Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20.0),
-          child: LoadingAnimationWidget.staggeredDotsWave(
-            color: Colors.white,
-            size: 40,
+
+          // USE SHIMMER EFFECT LOADING WIDGET HERE
+          child: Shimmer.fromColors(
+            baseColor: Color(0xFF1B201D),
+            highlightColor: Colors.grey[800]!,
+            child: Container(
+              width: screenWidth,
+              height: 120,
+              decoration: BoxDecoration(
+                color: Colors.grey[850],
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
           ),
         ),
       );
