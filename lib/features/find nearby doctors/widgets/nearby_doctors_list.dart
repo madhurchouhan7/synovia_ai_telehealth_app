@@ -74,7 +74,7 @@ class _NearbyDoctorsListState extends State<NearbyDoctorsList> {
             highlightColor: Colors.grey[800]!,
             child: Container(
               width: screenWidth,
-              height: 120,
+              height: 150,
               decoration: BoxDecoration(
                 color: Colors.grey[850],
                 borderRadius: BorderRadius.circular(12),
@@ -120,6 +120,7 @@ class _NearbyDoctorsListState extends State<NearbyDoctorsList> {
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: DoctorCard(
+                  doctor: doctor,
                   doctorName: doctor.name,
                   doctorSpecialization: widget.recommendedSpecialist,
                   doctorRating:

@@ -2,13 +2,16 @@
 class Doctor {
   final String name;
   final String address;
+  final String? formattedAddress;
+  final String? vicinity;
   final double latitude;
   final double longitude;
   final double? rating;
   final int? userRatingsTotal;
   final String? photoReference;
-  final String? phoneNumber; // <--- NEW
-  final List<String>? openingHours; // For displaying doctor's photo
+  final String? phoneNumber; 
+  final List<String>? openingHours; 
+  final String? placeId;
 
   Doctor({
     required this.name,
@@ -18,8 +21,11 @@ class Doctor {
     this.rating,
     this.userRatingsTotal,
     this.photoReference,
-    this.phoneNumber, // <--- NEW
+    this.phoneNumber, 
     this.openingHours,
+    this.formattedAddress,
+    this.vicinity,
+    this.placeId,
   });
 
   factory Doctor.fromJson(Map<String, dynamic> json) {
@@ -40,6 +46,9 @@ class Doctor {
       photoReference: photoRef,
       phoneNumber: null,
       openingHours: null,
+      formattedAddress: json['formatted_address'],
+      vicinity: json['vicinity'],
+      placeId: json['place_id'], 
     );
   }
 
@@ -66,6 +75,9 @@ class Doctor {
       photoReference: photoRef,
       phoneNumber: json['formatted_phone_number'], // Direct phone number
       openingHours: hours, // Weekday text for hours
+      formattedAddress: json['formatted_address'],
+      vicinity: json['vicinity'],
+      placeId: json['place_id'], // Place ID for detailed info
     );
   }
 }

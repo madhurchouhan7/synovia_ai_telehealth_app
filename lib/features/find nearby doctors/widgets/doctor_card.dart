@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
+import 'package:synovia_ai_telehealth_app/features/find%20nearby%20doctors/models/doctor_model.dart';
+import 'package:synovia_ai_telehealth_app/features/find%20nearby%20doctors/screens/doctor_details_screen.dart';
 import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
 
 class DoctorCard extends StatelessWidget {
@@ -12,6 +14,7 @@ class DoctorCard extends StatelessWidget {
   final String doctorImageUrl;
   final String? phoneNumber;
   final List<String>? openingHours;
+  final Doctor doctor;
 
   DoctorCard({
     super.key,
@@ -22,6 +25,7 @@ class DoctorCard extends StatelessWidget {
     required this.doctorImageUrl,
     this.phoneNumber,
     this.openingHours,
+    required this.doctor,
   });
 
   String _formatOpeningHours(List<String>? hours) {
@@ -123,14 +127,24 @@ class DoctorCard extends StatelessWidget {
             ),
 
             // 2. Doctor's Details icon
-            Transform(
-              alignment: Alignment.center,
-              transform: Matrix4.rotationY(3.14),
-              child: SvgPicture.asset(
-                SvgAssets.left_back_icon,
-                // ignore: deprecated_member_use
-                color: Color(0xFFA4A9A4),
-                height: screenWidth * 0.07,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DoctorDetailPage(doctor: doctor),
+                  ),
+                );
+              },
+              child: Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.rotationY(3.14),
+                child: SvgPicture.asset(
+                  SvgAssets.left_back_icon,
+                  // ignore: deprecated_member_use
+                  color: Color(0xFFA4A9A4),
+                  height: screenWidth * 0.07,
+                ),
               ),
             ),
           ],
