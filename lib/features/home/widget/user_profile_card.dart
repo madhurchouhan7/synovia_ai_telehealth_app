@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:synovia_ai_telehealth_app/config/routes.dart';
 import 'package:synovia_ai_telehealth_app/features/home/screens/notification_page.dart';
 import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -70,7 +69,12 @@ class UserProfileCard extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     // Handle notification tap
-                    Navigator.push(context, pageRoute(NotificationPage()));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NotificationPage(),
+                      ),
+                    );
                   },
                   child: SvgPicture.asset(
                     SvgAssets.ic_notification,

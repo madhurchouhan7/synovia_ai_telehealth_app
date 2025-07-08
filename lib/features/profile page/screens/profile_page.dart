@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/profile%20page/widgets/custom_profile_page_options.dart';
 import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
+import 'dart:developer' as developer; 
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -441,6 +442,7 @@ class ProfilePage extends StatelessWidget {
           );
           if (shouldLogout == true) {
             await FirebaseAuth.instance.signOut();
+            developer.log('🔓 User signed out');
           }
         },
         backgroundColor: brandColor,

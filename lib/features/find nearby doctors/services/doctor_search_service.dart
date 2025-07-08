@@ -127,7 +127,6 @@ class DoctorSearchService {
             'DoctorSearchService: Found ${data['results'].length} initial places from Text Search.',
           );
 
-          // --- CRITICAL FIX: Parallelize Place Details API calls ---
           List<Future<Doctor?>> detailFutures = [];
           for (var place in data['results']) {
             if (place['place_id'] != null) {
@@ -152,7 +151,6 @@ class DoctorSearchService {
               doctors.add(doctor);
             }
           }
-          // --- END CRITICAL FIX ---
 
           developer.log(
             'DoctorSearchService: Successfully fetched details for ${doctors.length} doctors.',

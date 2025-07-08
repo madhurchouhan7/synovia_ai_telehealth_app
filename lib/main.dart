@@ -1,4 +1,3 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -11,23 +10,33 @@ import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/provider/chat_provider.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/provider/settings_provider.dart';
 import 'package:synovia_ai_telehealth_app/features/comprehensive_health_assessment/provider/health_assessment_controller.dart';
-import 'package:synovia_ai_telehealth_app/features/error/screens/no_internet_error.dart';
 import 'package:synovia_ai_telehealth_app/features/welcome/welcome_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:synovia_ai_telehealth_app/firebase_options.dart';
 import 'features/home/home_page.dart';
+import 'dart:developer' as developer;
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   await dotenv.load(fileName: ".env");
 
   await ChatProvider.initHive();
 
+  // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  // Activate Firebase App Check
   await FirebaseAppCheck.instance.activate(
-    androidProvider: AndroidProvider.debug, // or .playIntegrity for production
+    androidProvider:
+        AndroidProvider.debug, // Change to .playIntegrity for production!
+    appleProvider: AppleProvider.debug,
   );
+
+  // Remove splash screen after all initializations are done
+  FlutterNativeSplash.remove();
 
   runApp(
     MultiProvider(
@@ -43,88 +52,87 @@ void main() async {
   );
 }
 
-class SplashApp extends StatefulWidget {
-  const SplashApp({super.key});
-
-  @override
-  State<SplashApp> createState() => _SplashAppState();
-}
-
-class _SplashAppState extends State<SplashApp> {
-  @override
-  void initState() {
-    super.initState();
-    initialization();
-  }
-
-  void initialization() async {
-    await Future.delayed(Duration(seconds: 4));
-    FlutterNativeSplash.remove();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarColor: darkBackgroundColor),
-    );
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: WelcomePage(),
-    );
-  }
-}
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  Future<bool> _checkInternetConnection() async {
-    var connectivityResult = await Connectivity().checkConnectivity();
-    return connectivityResult != ConnectivityResult.none;
-  }
-
   @override
   Widget build(BuildContext context) {
+    // Set system UI overlay style here for consistency
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(statusBarColor: darkBackgroundColor),
+    );
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Synovia Telehealth App',
       theme: ThemeData.dark(),
-      home: FutureBuilder<bool>(
-        future: _checkInternetConnection(),
+
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
+          developer.log(
+            'Auth State - ConnectionState: ${snapshot.connectionState}',
+          );
+          developer.log('Auth State - HasData: ${snapshot.hasData}');
+          developer.log('Auth State - Data: ${snapshot.data}');
+          developer.log('Auth State - Error: ${snapshot.error}');
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Scaffold(
               backgroundColor: darkBackgroundColor,
               body: Center(
-                child: LoadingAnimationWidget.progressiveDots(
-                  color: Colors.white,
-                  size: 40,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    LoadingAnimationWidget.staggeredDotsWave(
+                      color: Colors.white,
+                      size: 50,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Checking authentication...',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
                 ),
               ),
             );
-          }
-          if (snapshot.data == true) {
-            // Internet connected: check FirebaseAuth
-            return StreamBuilder<User?>(
-              stream: FirebaseAuth.instance.authStateChanges(),
-              builder: (context, authSnapshot) {
-                if (authSnapshot.connectionState != ConnectionState.active) {
-                  return Scaffold(
-                    backgroundColor: darkBackgroundColor,
-                    body: Center(
-                      child: LoadingAnimationWidget.progressiveDots(
-                        color: Colors.white,
-                        size: 40,
-                      ),
+          } else if (snapshot.hasError) {
+            developer.log('Auth Error: ${snapshot.error}');
+            return Scaffold(
+              backgroundColor: darkBackgroundColor,
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error, color: Colors.red, size: 60),
+                    SizedBox(height: 20),
+                    Text(
+                      'Authentication Error: ${snapshot.error}',
+                      style: TextStyle(color: Colors.red),
                     ),
-                  );
-                }
-                return authSnapshot.hasData
-                    ? const HomePage()
-                    : const WelcomePage();
-              },
+                    ElevatedButton(
+                      onPressed:
+                          () => Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => WelcomePage()),
+                          ),
+                      child: Text('Continue to Welcome'),
+                    ),
+                  ],
+                ),
+              ),
             );
+          } else {
+            final user = snapshot.data;
+            developer.log('Final routing - User: ${user?.uid ?? 'null'}');
+
+            if (user == null) {
+              return const WelcomePage();
+            } else {
+              return const HomePage();
+            }
           }
-          return NoInternetError();
         },
       ),
     );

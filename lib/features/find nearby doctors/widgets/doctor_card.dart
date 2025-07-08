@@ -117,7 +117,6 @@ class DoctorCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2, // Allow more lines for hours
                           ),
-                         
                         ],
                       ),
                     ),

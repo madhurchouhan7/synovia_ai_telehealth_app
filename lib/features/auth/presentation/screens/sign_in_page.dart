@@ -74,27 +74,31 @@ class _SignInPageState extends State<SignInPage> {
 
   Future<void> _signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) return; // User cancelled
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: ['email'],
+        serverClientId:
+            '182417883732-5tud5417v5rit6o74e08ti6j5nsj2r34.apps.googleusercontent.com',
+      );
+
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      if (googleUser == null) return; // user cancelled
 
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
+
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
+        accessToken: googleAuth.accessToken,
       );
 
       await FirebaseAuth.instance.signInWithCredential(credential);
 
       if (mounted) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const LoadingScreen()),
-        );
+        Navigator.push(context, pageRoute(const LoadingScreen()));
         await Future.delayed(const Duration(seconds: 3));
         if (mounted) {
           Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => PersonalizedHealthInsights()),
+            pageRoute(PersonalizedHealthInsights()),
             (route) => false,
           );
         }

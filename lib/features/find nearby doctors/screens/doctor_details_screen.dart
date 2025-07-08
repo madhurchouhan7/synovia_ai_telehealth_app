@@ -1,9 +1,12 @@
 // lib/features/find nearby doctors/screens/doctor_detail_page.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/find%20nearby%20doctors/models/doctor_model.dart';
 import 'package:synovia_ai_telehealth_app/features/find%20nearby%20doctors/services/doctor_search_service.dart';
+import 'package:synovia_ai_telehealth_app/features/find%20nearby%20doctors/utils/opening_hours_util.dart';
+import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DoctorDetailPage extends StatelessWidget {
@@ -13,9 +16,23 @@ class DoctorDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // This context is valid for the whole build method
     final DoctorSearchService doctorSearchService = DoctorSearchService();
     final screenWidth = MediaQuery.of(context).size.width;
+
+    final opeiningStatus = OpeningHoursUtil.getOpeningStatus(
+      doctor.openingHours,
+    );
+    Color statusColor = Colors.grey;
+
+    if (opeiningStatus.contains('Open Now')) {
+      statusColor = Colors.green;
+    } else if (opeiningStatus.contains('Closed')) {
+      statusColor = Colors.red;
+    } else if (opeiningStatus.contains('Hours not available')) {
+      statusColor = Colors.orange;
+    } else if (opeiningStatus.contains('Hours parsing error')) {
+      statusColor = Colors.yellow;
+    }
 
     return Scaffold(
       backgroundColor: darkBackgroundColor,
@@ -59,12 +76,12 @@ class DoctorDetailPage extends StatelessWidget {
                           fit: BoxFit.cover,
                           errorBuilder:
                               (context, error, stackTrace) => Image.network(
-                                'https://placehold.co/${(screenWidth * 0.8).toInt()}x${(screenWidth * 0.6).toInt()}/414B44/FFFFFF?text=No+Image',
+                                'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png',
                                 fit: BoxFit.cover,
                               ),
                         )
                         : Image.network(
-                          'https://placehold.co/${(screenWidth * 0.8).toInt()}x${(screenWidth * 0.6).toInt()}/414B44/FFFFFF?text=No+Image',
+                          'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png',
                           fit: BoxFit.cover,
                         ),
               ),
@@ -79,12 +96,19 @@ class DoctorDetailPage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
 
+            Divider(color: Colors.white.withOpacity(0.2), thickness: 1),
+
+            const SizedBox(height: 8),
             // Rating and Total Ratings
             Row(
               children: [
-                Icon(Icons.star_rounded, color: Colors.amber, size: 24),
+                SvgPicture.asset(
+                  SvgAssets.star,
+                  colorFilter: ColorFilter.mode(Colors.yellow, BlendMode.srcIn),
+                  width: 20,
+                  height: 20,
+                ),
                 const SizedBox(width: 4),
                 Text(
                   doctor.rating?.toStringAsFixed(1) ?? 'N/A',
@@ -107,10 +131,47 @@ class DoctorDetailPage extends StatelessWidget {
             ),
             const SizedBox(height: 15),
 
+            // Opening Status
+            Card(
+              color: statusColor,
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      SvgAssets.clock,
+                      colorFilter: ColorFilter.mode(
+                        statusColor == Colors.green
+                            ? Colors.white
+                            : Colors.black,
+                        BlendMode.srcIn,
+                      ),
+                      width: 20,
+                      height: 20,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      opeiningStatus,
+                      style: GoogleFonts.nunito(
+                        color:
+                            statusColor == Colors.green
+                                ? Colors.white
+                                : Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 15),
+
             // Address - Use formattedAddress if available, otherwise vicinity
             _buildDetailRow(
-              context: context, // <-- Pass context here
-              icon: Icons.location_on,
+              context: context,
+              svgAsses: SvgAssets.location,
               label: 'Address:',
               value: doctor.formattedAddress ?? doctor.vicinity ?? 'N/A',
             ),
@@ -120,7 +181,7 @@ class DoctorDetailPage extends StatelessWidget {
             if (doctor.phoneNumber != null && doctor.phoneNumber!.isNotEmpty)
               _buildDetailRow(
                 context: context, // <-- Pass context here
-                icon: Icons.phone,
+                svgAsses: SvgAssets.telephone,
                 label: 'Phone:',
                 value: doctor.phoneNumber!,
                 isLink: true, // Make it tappable to call
@@ -128,23 +189,37 @@ class DoctorDetailPage extends StatelessWidget {
             if (doctor.phoneNumber != null && doctor.phoneNumber!.isNotEmpty)
               const SizedBox(height: 10),
 
-
             // Opening Hours
             if (doctor.openingHours != null &&
                 doctor.openingHours!.isNotEmpty) ...[
-              Text(
-                'Opening Hours:',
-                style: GoogleFonts.nunito(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                children: [
+                  SvgPicture.asset(
+                    SvgAssets.clock,
+                    colorFilter: ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
+                    width: 20,
+                    height: 20,
+                  ),
+
+                  const SizedBox(width: 10),
+                  Text(
+                    'Opening Hours:',
+                    style: GoogleFonts.nunito(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 5),
               ...doctor.openingHours!
                   .map(
                     (hour) => Padding(
-                      padding: const EdgeInsets.only(left: 8.0, bottom: 2.0),
+                      padding: const EdgeInsets.only(left: 30, bottom: 4.0),
                       child: Text(
                         hour,
                         style: GoogleFonts.nunito(
@@ -214,10 +289,9 @@ class DoctorDetailPage extends StatelessWidget {
     );
   }
 
-  // --- CRITICAL FIX: Add BuildContext context parameter ---
   Widget _buildDetailRow({
-    required BuildContext context, // <-- New parameter
-    required IconData icon,
+    required BuildContext context,
+    required String svgAsses,
     required String label,
     required String value,
     bool isLink = false,
@@ -225,7 +299,12 @@ class DoctorDetailPage extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: lightTextColor, size: 20),
+        SvgPicture.asset(
+          svgAsses,
+          colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+          width: 20,
+          height: 20,
+        ),
         const SizedBox(width: 10),
         Expanded(
           child: Column(

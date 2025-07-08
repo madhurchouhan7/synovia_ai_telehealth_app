@@ -87,4 +87,13 @@ class SvgAssets {
   static const String alcohol_bottle = 'assets/images/svg/alcohol_bottle.svg';
 
   static const String allergies = 'assets/images/svg/allergies.svg';
+
+  static const String location = 'assets/icons/custom/location.svg';
+
+  static const String clock = 'assets/icons/custom/clock.svg';
+
+  static const String star = 'assets/icons/custom/star.svg';
+
+  static const String telephone = 'assets/icons/custom/telephone.svg';
+
 }
