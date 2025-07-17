@@ -25,13 +25,13 @@ class AIService {
         'symptoms': symptoms,
       };
       if (idToken != null) {
-        payload['idToken'] = idToken; // Manually add the ID token to the payload
+        payload['idToken'] = idToken; 
         log('AIService: Manually adding ID token to payload.');
       }
 
-      // --- NEW LOG: Log the final payload before sending ---
+      
       log('AIService: Final payload being sent to Cloud Function: $payload');
-      // --- END NEW LOG ---
+      
 
       final HttpsCallableResult result = await callable.call(payload);
 

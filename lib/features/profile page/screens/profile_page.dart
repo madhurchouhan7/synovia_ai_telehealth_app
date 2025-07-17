@@ -4,10 +4,177 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/profile%20page/widgets/custom_profile_page_options.dart';
 import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
-import 'dart:developer' as developer; 
+import 'dart:developer' as developer;
+
+class _PersonalInfoForm extends StatefulWidget {
+  @override
+  State<_PersonalInfoForm> createState() => _PersonalInfoFormState();
+}
+
+class _PersonalInfoFormState extends State<_PersonalInfoForm> {
+  final _formKey = GlobalKey<FormState>();
+  String _name = '';
+  String _age = '';
+  String _gender = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          TextFormField(
+            style: GoogleFonts.nunito(color: Colors.white),
+            decoration: InputDecoration(
+              labelText: 'Name',
+              labelStyle: GoogleFonts.nunito(color: Colors.white70),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white24),
+              ),
+            ),
+            onChanged: (val) => _name = val,
+          ),
+          const SizedBox(height: 12),
+          TextFormField(
+            style: GoogleFonts.nunito(color: Colors.white),
+            decoration: InputDecoration(
+              labelText: 'Age',
+              labelStyle: GoogleFonts.nunito(color: Colors.white70),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white24),
+              ),
+            ),
+            keyboardType: TextInputType.number,
+            onChanged: (val) => _age = val,
+          ),
+          const SizedBox(height: 12),
+          TextFormField(
+            style: GoogleFonts.nunito(color: Colors.white),
+            decoration: InputDecoration(
+              labelText: 'Gender',
+              labelStyle: GoogleFonts.nunito(color: Colors.white70),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white24),
+              ),
+            ),
+            onChanged: (val) => _gender = val,
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Personal information updated!',
+                      style: GoogleFonts.nunito(),
+                    ),
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: brandColor),
+            child: Text('Save', style: GoogleFonts.nunito(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MedicalHistoryForm extends StatefulWidget {
+  @override
+  State<_MedicalHistoryForm> createState() => _MedicalHistoryFormState();
+}
+
+class _MedicalHistoryFormState extends State<_MedicalHistoryForm> {
+  final _formKey = GlobalKey<FormState>();
+  String _conditions = '';
+  String _allergies = '';
+  String _medications = '';
+  String _surgeries = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          TextFormField(
+            style: GoogleFonts.nunito(color: Colors.white),
+            decoration: InputDecoration(
+              labelText: 'Conditions',
+              labelStyle: GoogleFonts.nunito(color: Colors.white70),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white24),
+              ),
+            ),
+            onChanged: (val) => _conditions = val,
+          ),
+          const SizedBox(height: 12),
+          TextFormField(
+            style: GoogleFonts.nunito(color: Colors.white),
+            decoration: InputDecoration(
+              labelText: 'Allergies',
+              labelStyle: GoogleFonts.nunito(color: Colors.white70),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white24),
+              ),
+            ),
+            onChanged: (val) => _allergies = val,
+          ),
+          const SizedBox(height: 12),
+          TextFormField(
+            style: GoogleFonts.nunito(color: Colors.white),
+            decoration: InputDecoration(
+              labelText: 'Medications',
+              labelStyle: GoogleFonts.nunito(color: Colors.white70),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white24),
+              ),
+            ),
+            onChanged: (val) => _medications = val,
+          ),
+          const SizedBox(height: 12),
+          TextFormField(
+            style: GoogleFonts.nunito(color: Colors.white),
+            decoration: InputDecoration(
+              labelText: 'Surgeries',
+              labelStyle: GoogleFonts.nunito(color: Colors.white70),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white24),
+              ),
+            ),
+            onChanged: (val) => _surgeries = val,
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Medical history updated!',
+                      style: GoogleFonts.nunito(),
+                    ),
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: brandColor),
+            child: Text('Save', style: GoogleFonts.nunito(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -231,6 +398,7 @@ class ProfilePage extends StatelessWidget {
               CustomProfilePageOptions(
                 text: 'Personal Information',
                 child: SvgPicture.asset(SvgAssets.ic_user, color: Colors.white),
+                onTap: () => _showPersonalInfoSheet(context),
               ),
 
               CustomProfilePageOptions(
@@ -239,6 +407,7 @@ class ProfilePage extends StatelessWidget {
                   SvgAssets.ic_health_plus,
                   color: Colors.white,
                 ),
+                onTap: () => _showMedicalHistorySheet(context),
               ),
 
               CustomProfilePageOptions(
@@ -249,30 +418,6 @@ class ProfilePage extends StatelessWidget {
               CustomProfilePageOptions(
                 text: 'Dark Mode',
                 child: SvgPicture.asset(SvgAssets.ic_moon, color: Colors.white),
-              ),
-
-              CustomProfilePageOptions(
-                text: 'Liked Devices',
-                child: SvgPicture.asset(
-                  SvgAssets.ic_mobile,
-                  color: Colors.white,
-                ),
-              ),
-
-              CustomProfilePageOptions(
-                text: 'Smart Notifications',
-                child: SvgPicture.asset(
-                  SvgAssets.ic_notification_bell,
-                  color: Colors.white,
-                ),
-              ),
-
-              CustomProfilePageOptions(
-                text: 'Chatbot Preference',
-                child: SvgPicture.asset(
-                  SvgAssets.ic_robotchat,
-                  color: Colors.white,
-                ),
               ),
 
               SizedBox(height: 20),
@@ -448,6 +593,78 @@ class ProfilePage extends StatelessWidget {
         backgroundColor: brandColor,
         child: Icon(Icons.logout_outlined, color: Colors.black),
       ),
+    );
+  }
+
+  void _showPersonalInfoSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.grey[900],
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder:
+          (context) => Padding(
+            padding: EdgeInsets.only(
+              left: 24,
+              right: 24,
+              top: 24,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Edit Personal Information',
+                  style: GoogleFonts.nunito(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _PersonalInfoForm(),
+              ],
+            ),
+          ),
+    );
+  }
+
+  void _showMedicalHistorySheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.grey[900],
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder:
+          (context) => Padding(
+            padding: EdgeInsets.only(
+              left: 24,
+              right: 24,
+              top: 24,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Medical History',
+                  style: GoogleFonts.nunito(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _MedicalHistoryForm(),
+              ],
+            ),
+          ),
     );
   }
 }

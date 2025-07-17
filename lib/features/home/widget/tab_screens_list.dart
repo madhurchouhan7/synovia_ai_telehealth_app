@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/screens/chat_page.dart';
-import 'package:synovia_ai_telehealth_app/features/home/screens/progress_page.dart';
-import 'package:synovia_ai_telehealth_app/features/home/screens/report_page.dart';
+import 'package:synovia_ai_telehealth_app/features/reports/screens/report_page.dart';
+import 'package:synovia_ai_telehealth_app/features/symptoms_history/screens/progress_page.dart';
 import 'package:synovia_ai_telehealth_app/features/home/widget/home_tab_content.dart';
 import 'package:synovia_ai_telehealth_app/features/profile%20page/screens/profile_page.dart';
 import 'package:synovia_ai_telehealth_app/features/find%20nearby%20doctors/models/doctor_model.dart';

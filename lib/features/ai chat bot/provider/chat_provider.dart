@@ -9,18 +9,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20symptoms%20checker/services/ai_service.dart';
 import 'package:uuid/uuid.dart';
-
-// --- Local Imports ---
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/constant.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/hive/boxes.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/hive/chat_history.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/hive/settings.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/hive/user_model.dart'; // Assuming this is for app user data, not just chat user
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/models/message.dart'; // Your Message model
-
-// --- Firebase Cloud Functions Service Import ---
-// This is the file where you put the getPersonalizedMedicalAdvice function
-// Make sure the path is correct based on your project structure.
 
 class ChatProvider extends ChangeNotifier {
   // list of messages displayed in the current chat
@@ -47,7 +41,7 @@ class ChatProvider extends ChangeNotifier {
 
   // current model type string
   String _modelType =
-      'gemini-pro'; // Default for text-only, will be overridden for vision
+      'gemini-pro'; 
 
   // loading boolean to indicate AI processing
   bool _isLoading = false;
@@ -95,7 +89,7 @@ class ChatProvider extends ChangeNotifier {
           );
           return messageData;
         }).toList();
-    // No notifyListeners here, as setInChatMessages will call it after populating
+   
     return newData;
   }
 
@@ -105,21 +99,18 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Sets the current model type string.
+  
   String setCurrentModel({required String newModel}) {
     _modelType = newModel;
     notifyListeners();
     return newModel;
   }
 
-  /// Initializes the appropriate GenerativeModel based on whether input is text-only or multi-modal.
-  /// This is primarily for direct Gemini API calls (e.g., for image input).
-  /// For personalized text-only responses, we will use the Cloud Function.
+  
   Future<void> setModel({required bool isTextOnly}) async {
-    // Only initialize if the model is null to avoid unnecessary re-initialization
+   
     if (isTextOnly) {
-      // If we decide to support direct text-only calls again, this would be used.
-      // For now, text-only goes through Cloud Function, so this part might be less critical.
+      
       _model =
           _textModel ??= GenerativeModel(
             model: setCurrentModel(
@@ -252,12 +243,7 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners(); // Notify after preparing the room
   }
 
-  // --- Core Message Sending Logic (MODIFIED) ---
 
-  /// Sends a message to the AI and handles the response.
-  /// This method now branches based on `isTextOnly` to use either
-  /// the Cloud Function for personalized text responses or
-  /// direct Gemini API for multi-modal responses.
   Future<void> sentMessage({
     required String message,
     required bool isTextOnly,
@@ -356,7 +342,7 @@ class ChatProvider extends ChangeNotifier {
         notifyListeners();
       }
     } else {
-      // --- MULTI-MODAL (TEXT + IMAGE) AI RESPONSE VIA DIRECT GEMINI API ---
+      
       await setModel(isTextOnly: false); // Ensure vision model is initialized
 
       List<Content> history = await getHistory(

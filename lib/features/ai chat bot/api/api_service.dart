@@ -1,4 +1,4 @@
-// lib/services/api_service.dart
+
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,7 +32,7 @@ Future<Map<String, dynamic>> getPersonalizedMedicalAdvice(
     });
 
     if (result.data is Map<String, dynamic>) {
-      // Ensure the map contains the expected keys, including recommendedSpecialist
+      
       final Map<String, dynamic> responseData = Map<String, dynamic>.from(
         result.data,
       );

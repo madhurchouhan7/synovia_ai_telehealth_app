@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:synovia_ai_telehealth_app/features/ai%20symptoms%20checker/widget/ai_symptoms_card.dart';
 import 'package:synovia_ai_telehealth_app/features/find%20nearby%20doctors/models/doctor_model.dart';
 import 'package:synovia_ai_telehealth_app/features/find%20nearby%20doctors/widgets/nearby_doctors_list.dart';
 import 'package:synovia_ai_telehealth_app/features/home/animations/animated_entrance.dart';
@@ -7,6 +6,7 @@ import 'package:synovia_ai_telehealth_app/features/home/widget/chat_bot_widget.d
 import 'package:synovia_ai_telehealth_app/features/home/widget/section_title.dart';
 import 'package:synovia_ai_telehealth_app/features/home/widget/user_profile_card.dart';
 import 'package:synovia_ai_telehealth_app/features/resources/widget/resources_article.dart';
+import 'package:synovia_ai_telehealth_app/features/symptoms_history/widgets/active_symptoms_widget.dart';
 
 class HomeTabContent extends StatelessWidget {
   final String recommendedSpecialist;
@@ -52,10 +52,16 @@ class HomeTabContent extends StatelessWidget {
                     delay: Duration(milliseconds: 500),
                     slideFrom: Offset(0, 0.5),
                   ),
+                  // AnimatedEntrance(
+                  //   child: const AiSymptomsCard(),
+                  //   slideBegin: const Offset(0, 0.5),
+                  //   delay: const Duration(milliseconds: 600),
+                  // ),
+                  const SizedBox(height: 15),
                   AnimatedEntrance(
-                    child: const AiSymptomsCard(),
+                    child: const ActiveSymptomsWidget(),
                     slideBegin: const Offset(0, 0.5),
-                    delay: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 700),
                   ),
                   const SizedBox(height: 15),
                   const SectionTitle(

@@ -10,6 +10,37 @@ const db = admin.firestore();
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
+
+// exports.sendScheduledReminders = functions.pubsub.schedule('every 1 minutes').onRun(async (context) => {
+//   const now = admin.firestore.Timestamp.now();
+//   const soon = admin.firestore.Timestamp.fromMillis(now.toMillis() + 60 * 1000);
+
+//   const remindersSnapshot = await admin.firestore().collection('reminders')
+//     .where('time', '>=', now)
+//     .where('time', '<', soon)
+//     .get();
+
+//   for (const doc of remindersSnapshot.docs) {
+//     const reminder = doc.data();
+//     const userDoc = await admin.firestore().collection('users').doc(reminder.userId).get();
+//     const fcmToken = userDoc.data().fcmToken;
+//     if (fcmToken) {
+//       await admin.messaging().send({
+//         token: fcmToken,
+//         notification: {
+//           title: reminder.title,
+//           body: reminder.description,
+//         },
+//         data: {
+//           type: reminder.type,
+//           reminderId: doc.id,
+//         },
+//       });
+//     }
+//   }
+//   return null;
+// });
+
 exports.getPersonalizedMedicalAdvice = functions.https.onCall(async (data, context) => {
     console.log('CF: Function started. Incoming raw data object:', data);
     console.log('CF: Auth context (from Firebase Functions):', JSON.stringify(context.auth));
@@ -140,6 +171,7 @@ exports.getPersonalizedMedicalAdvice = functions.https.onCall(async (data, conte
         if (userId && userId !== 'DEBUG_ANONYMOUS_USER') {
             console.log(`CF: Attempting to update Firestore for user: ${userId} with recommendedSpecialist: ${recommendedSpecialist}`);
             try {
+                // Update user document with current symptom info
                 await db.collection('users').doc(userId).update({
                     activeSymptomSeverity: classification,
                     lastSymptoms: userSymptoms,
@@ -147,7 +179,25 @@ exports.getPersonalizedMedicalAdvice = functions.https.onCall(async (data, conte
                     recommendedSpecialist: recommendedSpecialist,
                     updatedAt: admin.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
-                console.log('CF: Firestore update successful for user:', userId);
+
+                // Save to symptoms history collection
+                const symptomRecord = {
+                    symptoms: userSymptoms,
+                    severity: classification,
+                    aiAdvice: text,
+                    recommendedSpecialist: recommendedSpecialist,
+                    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                    isActive: true,
+                    followUpNotes: null,
+                    resolvedAt: null
+                };
+
+                await db.collection('users').doc(userId)
+                    .collection('symptoms_history')
+                    .doc(Date.now().toString())
+                    .set(symptomRecord);
+
+                console.log('CF: Firestore update and symptoms history save successful for user:', userId);
             } catch (firestoreError) {
                 console.error('CF: ERROR during Firestore update for user:', userId, 'Error:', firestoreError);
             }

@@ -9,6 +9,8 @@ import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/widgets/previ
 import 'package:synovia_ai_telehealth_app/utils/utilities.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:synovia_ai_telehealth_app/features/symptoms_history/provider/symptoms_history_provider.dart';
+import 'package:provider/provider.dart';
 
 class BottomChatField extends StatefulWidget {
   const BottomChatField({super.key, required this.chatProvider});
@@ -36,21 +38,23 @@ class _BottomChatFieldState extends State<BottomChatField> {
     required ChatProvider chatProvider,
     required bool isTextOnly,
   }) async {
-    // --- CRITICAL FIX: Clear text and images immediately upon sending ---
+    
     textController.clear();
     widget.chatProvider.setImagesFileList(listValue: []);
     textFieldFocus.unfocus(); // Unfocus keyboard immediately
-    // --- END CRITICAL FIX ---
+    
 
     try {
       await chatProvider.sentMessage(message: message, isTextOnly: isTextOnly);
+    
+      final contextToUse = context;
+      contextToUse.read<SymptomsHistoryProvider>().loadActiveSymptoms();
+      contextToUse.read<SymptomsHistoryProvider>().loadSymptomsHistory();
+      // --- END REFRESH ---
     } catch (e) {
       log('error : $e');
     }
-    // The finally block is now mainly for error handling or other cleanup
-    // that might depend on the async call completing.
-    // For clearing text/images/unfocusing, it's better to do it immediately.
-    // No 'finally' block needed for clearing here anymore.
+  
   }
 
   void pickImage() async {
@@ -66,11 +70,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
     }
   }
 
-  // NOTE: This sendSymptomToFirebase method seems to be an old or alternative
-  // way of sending messages. Your primary send logic is in sendChatMessage
-  // which calls chatProvider.sentMessage.
-  // If this method is still in use, its clearing logic would also need adjustment.
-  // Assuming sendChatMessage is the main entry point for user input.
+  
   Future<void> sendSymptomToFirebase(String message) async {
     try {
       widget.chatProvider.setLoading(value: true);
@@ -151,10 +151,7 @@ Doctor Type: ${result['specialization']}''';
       );
     } finally {
       widget.chatProvider.setLoading(value: false);
-      // If this method is used, its clear logic should also be immediate
-      // textController.clear(); // Move this up if this method is the primary send
-      // widget.chatProvider.setImagesFileList(listValue: []); // Move this up
-      // textFieldFocus.unfocus(); // Move this up
+      
     }
   }
 

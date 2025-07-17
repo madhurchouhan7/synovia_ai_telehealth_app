@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:provider/provider.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/screens/chat_page.dart';
 import 'package:synovia_ai_telehealth_app/features/find%20nearby%20doctors/models/doctor_model.dart';
@@ -12,6 +13,7 @@ import 'package:synovia_ai_telehealth_app/features/home/controller/doctor_fetch_
 import 'package:synovia_ai_telehealth_app/features/home/services/location_permission_handler.dart';
 import 'package:synovia_ai_telehealth_app/features/home/widget/tab_screens_list.dart';
 import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
+import 'package:synovia_ai_telehealth_app/features/symptoms_history/provider/symptoms_history_provider.dart';
 import 'dart:developer' as developer;
 
 class HomePage extends StatefulWidget {
@@ -46,6 +48,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     checkCurrentUser();
     // Start by loading cached specialist, which will then trigger _checkLocationAndFetchDoctors
     _loadCachedSpecialistAndFetchDoctors();
+    // Load active symptoms
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<SymptomsHistoryProvider>().loadActiveSymptoms();
+    });
   }
 
   /// Loads the last recommended specialist from SharedPreferences
@@ -150,7 +156,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       child: SafeArea(
         child: Scaffold(
           backgroundColor: darkBackgroundColor,
-          // --- CRITICAL FIX: Use the _screensList getter here ---
           body: IndexedStack(index: _selectedIndex, children: _screensList),
           bottomNavigationBar: GNav(
             curve: Curves.easeInOut,
@@ -180,7 +185,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
               GButton(
                 icon: Icons.search,
-                leading: SvgPicture.asset(SvgAssets.nav_chart),
+                leading: SvgPicture.asset(SvgAssets.nav_document),
                 backgroundColor: Color(0xFF4B524B),
                 iconActiveColor: Colors.white,
               ),
@@ -193,7 +198,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
               GButton(
                 icon: Icons.assessment,
-                leading: SvgPicture.asset(SvgAssets.nav_document),
+                leading: SvgPicture.asset(SvgAssets.nav_chart),
                 iconColor: lightTextColor,
                 backgroundColor: Color(0xFF4B524B),
                 iconActiveColor: Colors.white,
