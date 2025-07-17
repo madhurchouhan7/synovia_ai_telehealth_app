@@ -118,7 +118,7 @@ class ChatProvider extends ChangeNotifier {
             ), // Using gemini-pro for text
             apiKey: getApiKey(),
             generationConfig: GenerationConfig(
-              temperature: 0.4,
+              temperature: 0.3,
               topK: 32,
               topP: 1,
               maxOutputTokens: 4096,
@@ -137,7 +137,7 @@ class ChatProvider extends ChangeNotifier {
             ), // Using gemini-1.5-flash for vision
             apiKey: getApiKey(),
             generationConfig: GenerationConfig(
-              temperature: 0.4,
+              temperature: 0.3,
               topK: 32,
               topP: 1,
               maxOutputTokens: 4096,

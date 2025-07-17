@@ -58,6 +58,9 @@ class UserHealthModel {
     return {
       'name': name,
       'goal': goal,
+      'sleepHours': sleepHours,
+      'medication': medication,
+      'height': height,
       'gender': gender,
       'age': age,
       'weight': weight,

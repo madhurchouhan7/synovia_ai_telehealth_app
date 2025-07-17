@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:numeric_selector/numeric_selector.dart';
 import 'package:provider/provider.dart';
 import 'package:synovia_ai_telehealth_app/config/routes.dart';
@@ -31,8 +32,7 @@ class _HealthAssessmentPageState extends State<HealthAssessmentPage> {
   final _weightController = TextEditingController();
   final _heightController = TextEditingController();
   final _sleepController = TextEditingController();
-  String? _selectedGoal;
-  String? _selectedGender;
+
   String? _selectedBloodType;
   String? _selectedFitnessLevel;
   String? _selectedAlcohol;
@@ -770,14 +770,15 @@ class _HealthAssessmentPageState extends State<HealthAssessmentPage> {
                                   .userHealthModel
                                   .sleepHours = sleepHours;
                             });
-                            
+
                             showDialog(
                               context: context,
                               barrierDismissible: false,
                               builder: (context) {
-                                return const Center(
-                                  child: CircularProgressIndicator(
+                                return Center(
+                                  child: LoadingAnimationWidget.hexagonDots(
                                     color: brandColor,
+                                    size: fontSize * 60,
                                   ),
                                 );
                               },
