@@ -5,6 +5,8 @@ class Message {
   StringBuffer message;
   List<String> imagesUrls;
   DateTime timeSent;
+  final String? severity;
+  final bool isError;
 
   // constructor
   Message({
@@ -14,6 +16,8 @@ class Message {
     required this.message,
     required this.imagesUrls,
     required this.timeSent,
+    this.severity,
+    this.isError = false,
   });
 
   // toMap
@@ -25,6 +29,8 @@ class Message {
       'message': message.toString(),
       'imagesUrls': imagesUrls,
       'timeSent': timeSent.toIso8601String(),
+      'severity': severity,
+      'isError': isError,
     };
   }
 
@@ -37,6 +43,8 @@ class Message {
       message: StringBuffer(map['message']),
       imagesUrls: List<String>.from(map['imagesUrls']),
       timeSent: DateTime.parse(map['timeSent']),
+      severity: map['severity'],
+      isError: map['isError'] ?? false,
     );
   }
 
@@ -48,6 +56,8 @@ class Message {
     StringBuffer? message,
     List<String>? imagesUrls,
     DateTime? timeSent,
+    String? severity,
+    bool? isError,
   }) {
     return Message(
       messageId: messageId ?? this.messageId,
@@ -56,6 +66,8 @@ class Message {
       message: message ?? this.message,
       imagesUrls: imagesUrls ?? this.imagesUrls,
       timeSent: timeSent ?? this.timeSent,
+      severity: severity ?? this.severity,
+      isError: isError ?? this.isError,
     );
   }
 

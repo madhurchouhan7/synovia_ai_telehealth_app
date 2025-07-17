@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
-import 'package:synovia_ai_telehealth_app/features/find%20nearby%20doctors/widgets/doctor_card.dart';
 
 class FindNearbyDoctors extends StatelessWidget {
   const FindNearbyDoctors({super.key});
@@ -25,7 +24,7 @@ class FindNearbyDoctors extends StatelessWidget {
                   children: [
                     // 30+
                     Text(
-                      '30+',
+                      '1+',
                       style: GoogleFonts.nunito(
                         color: Colors.white,
                         fontSize: fontSize * 50,
@@ -60,26 +59,6 @@ class FindNearbyDoctors extends StatelessWidget {
             ),
 
             const SizedBox(height: 6.0),
-
-            DoctorCard(
-              doctorName: 'Dr. John Doe',
-              doctorSpecialization: 'Cardiologist',
-              doctorRating: '4.5',
-              doctorTiming: '9 AM - 5 PM',
-              doctorImageUrl:
-                  'https://media.istockphoto.com/id/177373093/photo/indian-male-doctor.jpg?s=612x612&w=0&k=20&c=5FkfKdCYERkAg65cQtdqeO_D0JMv6vrEdPw3mX1Lkfg=', // Replace with actual image URL
-            ),
-
-            const SizedBox(height: 5.0),
-
-            DoctorCard(
-              doctorName: 'Dr. Jane Smith',
-              doctorSpecialization: 'Dermatologist',
-              doctorRating: '4.8',
-              doctorTiming: '10 AM - 6 PM',
-              doctorImageUrl:
-                  'https://thumbs.dreamstime.com/b/confident-anime-woman-doctor-portrait-professional-medical-expert-healthcare-clinic-concept-328870439.jpg',
-            ),
           ],
         ),
       ),

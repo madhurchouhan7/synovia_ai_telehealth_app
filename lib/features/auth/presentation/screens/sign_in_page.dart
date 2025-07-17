@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:synovia_ai_telehealth_app/config/routes.dart';
 import 'package:synovia_ai_telehealth_app/core/colors.dart';
+import 'package:synovia_ai_telehealth_app/features/auth/presentation/screens/firebase_sign_in_page.dart';
 import 'package:synovia_ai_telehealth_app/features/auth/presentation/screens/forgot_password_page.dart';
 import 'package:synovia_ai_telehealth_app/features/auth/presentation/screens/loading_screen.dart';
 import 'package:synovia_ai_telehealth_app/features/auth/presentation/screens/sign_up_page.dart';
 import 'package:synovia_ai_telehealth_app/features/auth/presentation/widgets/cta_button.dart';
 import 'package:synovia_ai_telehealth_app/features/auth/presentation/widgets/social_media_signin_button.dart';
+import 'package:synovia_ai_telehealth_app/features/auth/services/auth_services.dart';
+import 'package:synovia_ai_telehealth_app/features/home/home_page.dart';
+import 'package:synovia_ai_telehealth_app/features/welcome/personalized_health_insights.dart';
 import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:synovia_ai_telehealth_app/features/welcome/personalized_health_insights.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -26,6 +29,7 @@ class _SignInPageState extends State<SignInPage> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+  final authService = AuthService();
 
   @override
   void initState() {
@@ -43,15 +47,8 @@ class _SignInPageState extends State<SignInPage> {
         password: _passwordController.text,
       );
       if (mounted) {
-        Navigator.push(context, pageRoute(LoadingScreen()));
-        await Future.delayed(const Duration(seconds: 5));
-        if (mounted) {
-          // Use pushAndRemoveUntil to clear the stack and prevent returning to loading screen
-          Navigator.of(context).pushAndRemoveUntil(
-            pageRoute(PersonalizedHealthInsights()),
-            (route) => false,
-          );
-        }
+        Navigator.of(context).popUntil((route) => route.isFirst);
+        // Do not push any new page; let main.dart StreamBuilder handle navigation
       }
     } on FirebaseAuthException catch (e) {
       String msg = 'Sign in failed';
@@ -72,39 +69,21 @@ class _SignInPageState extends State<SignInPage> {
     if (mounted) setState(() => _isLoading = false);
   }
 
-  Future<void> _signInWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) return; // User cancelled
-
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      await FirebaseAuth.instance.signInWithCredential(credential);
-
+  void _signInWithGoogle() async {
+    final userCred = await authService.signInWithGoogle();
+    if (userCred != null) {
+      print('Signed in as: ${userCred.user?.displayName}');
       if (mounted) {
-        Navigator.push(
+        Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (_) => const LoadingScreen()),
+          pageRoute(PersonalizedHealthInsights()),
+          (route) => false,
         );
-        await Future.delayed(const Duration(seconds: 6));
-        if (mounted) {
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => PersonalizedHealthInsights()),
-            (route) => false,
-          );
-        }
       }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Google sign-in failed: $e')));
-      }
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Google Sign-In failed')));
     }
   }
 
@@ -270,12 +249,10 @@ class _SignInPageState extends State<SignInPage> {
 
                       // Google sign in button
                       InkWell(
-                        onTap: () {
-                          _signInWithGoogle();
-                        },
+                        onTap: () => _signInWithGoogle(),
                         child: SocialMediaSigninButton(
                           svgAssets: SvgAssets.google,
-                          onTap: _signInWithGoogle,
+                          onTap: () => _signInWithGoogle(),
                         ),
                       ),
 

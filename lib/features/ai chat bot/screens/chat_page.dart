@@ -11,6 +11,7 @@ import 'package:synovia_ai_telehealth_app/features/ai%20chat%20bot/widgets/chat_
 import 'package:synovia_ai_telehealth_app/features/home/animations/animated_entrance.dart';
 import 'package:synovia_ai_telehealth_app/utils/svg_assets.dart';
 import 'package:synovia_ai_telehealth_app/utils/utilities.dart';
+import 'package:synovia_ai_telehealth_app/features/symptoms_history/provider/symptoms_history_provider.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -28,6 +29,15 @@ class _ChatScreenState extends State<ChatPage> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Load active symptoms when chat page is opened
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<SymptomsHistoryProvider>().loadActiveSymptoms();
+    });
   }
 
   void _scrollToBottom() {
@@ -51,8 +61,14 @@ class _ChatScreenState extends State<ChatPage> {
     final screenWidth = MediaQuery.of(context).size.width;
     final fontSize = screenWidth / 600;
 
-    return Consumer<ChatProvider>(
+   return Consumer<ChatProvider>(
       builder: (context, chatProvider, child) {
+        // Remove addListener from build to avoid performance issues
+        if (chatProvider.inChatMessages.isNotEmpty) {
+          _scrollToBottom();
+        }
+
+        // Instead, use an effect to scroll after build
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (chatProvider.inChatMessages.isNotEmpty) {
             _scrollToBottom();
