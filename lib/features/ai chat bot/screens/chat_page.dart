@@ -23,10 +23,17 @@ class _ChatScreenState extends State<ChatPage> {
   // scroll controller
 
   final ScrollController _scrollController = ScrollController();
+  final List<String> _quickPrompts = [
+    'I have mild headache from morning',
+    'I am feeling tired and dizzy',
+    'I have a sore throat and cough',
+  ];
+  TextEditingController? _inputController;
 
   @override
   void dispose() {
     _scrollController.dispose();
+    _inputController?.dispose();
     super.dispose();
   }
 
@@ -37,6 +44,22 @@ class _ChatScreenState extends State<ChatPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<SymptomsHistoryProvider>().loadActiveSymptoms();
     });
+  }
+
+  void _setInputController(TextEditingController controller) {
+    _inputController = controller;
+  }
+
+  void _onPromptTap(String prompt) {
+    if (_inputController != null) {
+      _inputController!.text = prompt;
+      _inputController!.selection = TextSelection.fromPosition(
+        TextPosition(offset: prompt.length),
+      );
+      FocusScope.of(
+        context,
+      ).requestFocus(FocusNode()); // Optionally close keyboard
+    }
   }
 
   void _scrollToBottom() {
@@ -152,6 +175,32 @@ class _ChatScreenState extends State<ChatPage> {
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
+                                  SizedBox(height: screenWidth * 0.04),
+                                  Wrap(
+                                    spacing: 8,
+                                    runSpacing: 8,
+                                    alignment: WrapAlignment.center,
+                                    children:
+                                        _quickPrompts
+                                            .map(
+                                              (prompt) => ActionChip(
+                                                label: Text(
+                                                  prompt,
+                                                  style: GoogleFonts.nunito(
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                backgroundColor: brandColor
+                                                    .withOpacity(0.15),
+                                                labelStyle: TextStyle(
+                                                  color: brandColor,
+                                                ),
+                                                onPressed:
+                                                    () => _onPromptTap(prompt),
+                                              ),
+                                            )
+                                            .toList(),
+                                  ),
                                 ],
                               ),
                             )
@@ -166,7 +215,10 @@ class _ChatScreenState extends State<ChatPage> {
                     horizontal: 8.0,
                     vertical: 8.0,
                   ),
-                  child: BottomChatField(chatProvider: chatProvider),
+                  child: BottomChatField(
+                    chatProvider: chatProvider,
+                    onInputControllerReady: _setInputController,
+                  ),
                 ),
               ],
             ),

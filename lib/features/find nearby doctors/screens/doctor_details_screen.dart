@@ -11,8 +11,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class DoctorDetailPage extends StatelessWidget {
   final Doctor doctor;
+  final double? distanceInKm;
 
-  const DoctorDetailPage({super.key, required this.doctor});
+  const DoctorDetailPage({super.key, required this.doctor, this.distanceInKm});
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +97,35 @@ class DoctorDetailPage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            if (distanceInKm != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: brandColor.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.location_on, color: brandColor, size: 20),
+                      const SizedBox(width: 6),
+                      Text(
+                        '${distanceInKm!.toStringAsFixed(1)} km away',
+                        style: GoogleFonts.nunito(
+                          color: brandColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
 
             Divider(color: Colors.white.withOpacity(0.2), thickness: 1),
 

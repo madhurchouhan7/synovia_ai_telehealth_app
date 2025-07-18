@@ -13,9 +13,14 @@ import 'package:synovia_ai_telehealth_app/features/symptoms_history/provider/sym
 import 'package:provider/provider.dart';
 
 class BottomChatField extends StatefulWidget {
-  const BottomChatField({super.key, required this.chatProvider});
+  const BottomChatField({
+    super.key,
+    required this.chatProvider,
+    this.onInputControllerReady,
+  });
 
   final ChatProvider chatProvider;
+  final void Function(TextEditingController)? onInputControllerReady;
 
   @override
   State<BottomChatField> createState() => _BottomChatFieldState();
@@ -25,6 +30,16 @@ class _BottomChatFieldState extends State<BottomChatField> {
   final TextEditingController textController = TextEditingController();
   final FocusNode textFieldFocus = FocusNode();
   final ImagePicker _picker = ImagePicker();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.onInputControllerReady != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        widget.onInputControllerReady!(textController);
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -38,15 +53,13 @@ class _BottomChatFieldState extends State<BottomChatField> {
     required ChatProvider chatProvider,
     required bool isTextOnly,
   }) async {
-    
     textController.clear();
     widget.chatProvider.setImagesFileList(listValue: []);
     textFieldFocus.unfocus(); // Unfocus keyboard immediately
-    
 
     try {
       await chatProvider.sentMessage(message: message, isTextOnly: isTextOnly);
-    
+
       final contextToUse = context;
       contextToUse.read<SymptomsHistoryProvider>().loadActiveSymptoms();
       contextToUse.read<SymptomsHistoryProvider>().loadSymptomsHistory();
@@ -54,7 +67,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
     } catch (e) {
       log('error : $e');
     }
-  
   }
 
   void pickImage() async {
@@ -70,7 +82,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
     }
   }
 
-  
   Future<void> sendSymptomToFirebase(String message) async {
     try {
       widget.chatProvider.setLoading(value: true);
@@ -151,7 +162,6 @@ Doctor Type: ${result['specialization']}''';
       );
     } finally {
       widget.chatProvider.setLoading(value: false);
-      
     }
   }
 

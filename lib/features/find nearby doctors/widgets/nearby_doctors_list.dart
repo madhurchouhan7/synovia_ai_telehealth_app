@@ -6,6 +6,7 @@ import 'package:synovia_ai_telehealth_app/core/colors.dart';
 import 'package:synovia_ai_telehealth_app/features/find%20nearby%20doctors/models/doctor_model.dart';
 import 'package:synovia_ai_telehealth_app/features/find%20nearby%20doctors/services/doctor_search_service.dart';
 import 'package:synovia_ai_telehealth_app/features/find%20nearby%20doctors/widgets/doctor_card.dart';
+import 'package:geolocator/geolocator.dart';
 // Corrected path to your DoctorCard
 
 class NearbyDoctorsList extends StatefulWidget {
@@ -31,6 +32,29 @@ class NearbyDoctorsList extends StatefulWidget {
 class _NearbyDoctorsListState extends State<NearbyDoctorsList> {
   final DoctorSearchService _doctorSearchService = DoctorSearchService();
   bool _showAllDoctors = false;
+  Position? _userPosition;
+  bool _locationError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserLocation();
+  }
+
+  Future<void> _fetchUserLocation() async {
+    try {
+      final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      setState(() {
+        _userPosition = position;
+      });
+    } catch (e) {
+      setState(() {
+        _locationError = true;
+      });
+    }
+  }
 
   @override
   void didUpdateWidget(covariant NearbyDoctorsList oldWidget) {
@@ -117,6 +141,17 @@ class _NearbyDoctorsListState extends State<NearbyDoctorsList> {
             itemCount: doctorsToShow,
             itemBuilder: (context, index) {
               final doctor = widget.doctors[index];
+              double? distanceInKm;
+              if (_userPosition != null) {
+                distanceInKm =
+                    Geolocator.distanceBetween(
+                      _userPosition!.latitude,
+                      _userPosition!.longitude,
+                      doctor.latitude,
+                      doctor.longitude,
+                    ) /
+                    1000.0;
+              }
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: DoctorCard(
@@ -136,6 +171,7 @@ class _NearbyDoctorsListState extends State<NearbyDoctorsList> {
                           : 'https://stvincentipa.com/wp-content/uploads/2022/11/Doctor-placeholder-male.jpg',
                   phoneNumber: doctor.phoneNumber,
                   openingHours: doctor.openingHours,
+                  distanceInKm: distanceInKm,
                 ),
               );
             },
