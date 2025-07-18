@@ -15,6 +15,7 @@ class DoctorCard extends StatelessWidget {
   final String? phoneNumber;
   final List<String>? openingHours;
   final Doctor doctor;
+  final double? distanceInKm;
 
   DoctorCard({
     super.key,
@@ -26,6 +27,7 @@ class DoctorCard extends StatelessWidget {
     this.phoneNumber,
     this.openingHours,
     required this.doctor,
+    this.distanceInKm,
   });
 
   String _formatOpeningHours(List<String>? hours) {
@@ -74,6 +76,21 @@ class DoctorCard extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
+                          if (distanceInKm != null)
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 2.0,
+                                bottom: 2.0,
+                              ),
+                              child: Text(
+                                '${distanceInKm!.toStringAsFixed(1)} km away',
+                                style: GoogleFonts.nunito(
+                                  color: brandColor,
+                                  fontSize: fontSize * 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
 
                           SizedBox(height: screenWidth / 60),
 
@@ -96,7 +113,7 @@ class DoctorCard extends StatelessWidget {
                               fontSize: fontSize * 20,
                             ),
                           ),
-                          
+
                           if (phoneNumber != null && phoneNumber!.isNotEmpty)
                             Text(
                               '📞 ${phoneNumber!}',
@@ -131,7 +148,11 @@ class DoctorCard extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DoctorDetailPage(doctor: doctor),
+                    builder:
+                        (context) => DoctorDetailPage(
+                          doctor: doctor,
+                          distanceInKm: distanceInKm,
+                        ),
                   ),
                 );
               },

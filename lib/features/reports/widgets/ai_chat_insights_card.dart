@@ -229,27 +229,20 @@ class _AiChatInsightsCardState extends State<AiChatInsightsCard> {
                     ),
                     if (symptom.aiAdvice.isNotEmpty) ...[
                       const SizedBox(height: 6),
-                      Text(
+                      _buildPersonalizedAdvice(
+                        context,
                         _extractKeyInsight(symptom.aiAdvice),
-                        style: GoogleFonts.nunito(
-                          color: Colors.white70,
-                          fontSize: 14,
-                        ),
-                        maxLines: expanded ? 8 : 2,
-                        overflow:
-                            expanded
-                                ? TextOverflow.visible
-                                : TextOverflow.ellipsis,
+                        _getAdviceType(symptom.aiAdvice),
+                        expanded,
                       ),
                     ],
                     if (expanded && symptom.aiAdvice.isNotEmpty) ...[
                       const SizedBox(height: 6),
-                      Text(
+                      _buildPersonalizedAdvice(
+                        context,
                         symptom.aiAdvice,
-                        style: GoogleFonts.nunito(
-                          color: Colors.white54,
-                          fontSize: 14,
-                        ),
+                        _getAdviceType(symptom.aiAdvice),
+                        true,
                       ),
                     ],
                     if (symptom.followUpNotes?.isNotEmpty == true) ...[
@@ -377,5 +370,101 @@ class _AiChatInsightsCardState extends State<AiChatInsightsCard> {
       }
     }
     return sentences.first.trim();
+  }
+
+  Widget _buildPersonalizedAdvice(
+    BuildContext context,
+    String advice,
+    String adviceType,
+    bool expanded,
+  ) {
+    // If advice is only 'see doctor' or similar, add a friendly message
+    final lower = advice.trim().toLowerCase();
+    final isOnlySeeDoctor =
+        (lower == 'see a doctor' ||
+            lower == 'see doctor' ||
+            lower == 'consult a doctor' ||
+            lower == 'consult your doctor' ||
+            lower == 'consult specialist' ||
+            lower == 'emergency' ||
+            lower == 'see a specialist');
+    if (isOnlySeeDoctor) {
+      return Row(
+        children: [
+          Icon(Icons.favorite, color: brandColor, size: 16),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Text(
+              'We recommend seeing a doctor for your symptoms. Your health matters—don’t hesitate to seek help! 💚',
+              style: GoogleFonts.nunito(
+                color: brandColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+              maxLines: expanded ? 8 : 2,
+              overflow: expanded ? TextOverflow.visible : TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      );
+    }
+    // Highlight keywords in advice
+    final highlightWords = [
+      'rest',
+      'hydration',
+      'monitor',
+      'emergency',
+      'doctor',
+      'specialist',
+      'watch',
+      'self-care',
+      'important',
+      'should',
+      'recommend',
+      'advise',
+      'suggest',
+      'consider',
+    ];
+    String highlighted = advice;
+    for (final word in highlightWords) {
+      highlighted = highlighted.replaceAllMapped(
+        RegExp(
+          '(?<![\\w])(' + RegExp.escape(word) + ')(?![\\w])',
+          caseSensitive: false,
+        ),
+        (match) => '[${match[0]}]',
+      );
+    }
+    // Split and build TextSpan for highlights
+    final spans = <TextSpan>[];
+    final parts = highlighted.split(RegExp(r'(\[|\])'));
+    bool highlight = false;
+    for (final part in parts) {
+      if (part == '[') {
+        highlight = true;
+        continue;
+      } else if (part == ']') {
+        highlight = false;
+        continue;
+      }
+      spans.add(
+        TextSpan(
+          text: part,
+          style:
+              highlight
+                  ? GoogleFonts.nunito(
+                    color: brandColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  )
+                  : GoogleFonts.nunito(color: Colors.white70, fontSize: 14),
+        ),
+      );
+    }
+    return RichText(
+      text: TextSpan(children: spans),
+      maxLines: expanded ? 8 : 2,
+      overflow: expanded ? TextOverflow.visible : TextOverflow.ellipsis,
+    );
   }
 }
