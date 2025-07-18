@@ -53,6 +53,13 @@ class OnboardingController {
       subtitle: "Say Goodbye to old digital Consultations",
       svgAssets: SvgAssets.health_assessment_onboarding,
     ),
+
+    OnboardingContent(
+      title: "Intuitive Medication Management",
+      subtitle: "Hassle-free Medication Management with AI",
+      svgAssets: SvgAssets.med_onboarding,
+    ),
+
     OnboardingContent(
       title: "EHR Access at your Fingertips, anywhere",
       subtitle: "Empower your health data anywhere",

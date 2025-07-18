@@ -41,7 +41,7 @@ class PersonalizedHealthInsights extends StatelessWidget {
 
                   // subtext
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40),
+                    padding: EdgeInsets.symmetric(horizontal: 30),
                     child: Text(
                       'We will ask a few Questions to understand your health better. This Helps us to provide more accurate insights and suggestions.',
                       overflow: TextOverflow.clip,
