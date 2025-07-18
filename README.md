@@ -22,25 +22,25 @@
 
 ### Home Page
 
-![Home Screen](screenshots/home_screen.png)
+![Home Screen](assets\screenshots/home_page.png)
 
 ### Nearby Doctors
 
-![Nearby Doctors](screenshots/nearby_doctors.png)
-![Nearby Doctors](screenshots/nearby_doctors2.png)
+![Nearby Doctors](assets\screenshots/nearby_doctors.png)
+![Nearby Doctors](assets\screenshots/nearby_doctors2.png)
 
 ### Chat Page
 
-![Chat Page](screenshots/chat_page.png)
-![Chat Page](screenshots/chat_page2.png)
+![Chat Page](assets\screenshots/chat_page.png)
+![Chat Page](assets\screenshots/chat_page2.png)
 
 ### Health Progress
 
-![Health Progress](screenshots/health_progress.png)
+![Health Progress](assets\screenshots/health_progress.png)
 
 ### Health Reports
 
-![Health Reports](screenshots/health_reports.png)
+![Health Reports](assets\screenshots/health_reports.png)
 
 ---
 
@@ -101,7 +101,7 @@ assets/ # Images, icons, illustrations
 git clone https://github.com/<your-username>/synovia-ai.git
 cd synovia-ai
 flutter pub get
-flutter run 
+flutter run
 ```
 
 ---
