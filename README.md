@@ -58,14 +58,16 @@
 
 ## 📂 Project Structure
 
-````lib/
+````
+lib/
 ├── main.dart
 ├── config/
 ├── core/
 ├── features/
 ├── utils/
 functions/ # Firebase Cloud Functions (Node.js)
-assets/ # Images, icons, illustrations```
+assets/ # Images, icons, illustrations
+```
 
 ---
 
@@ -99,7 +101,8 @@ assets/ # Images, icons, illustrations```
 git clone https://github.com/<your-username>/synovia-ai.git
 cd synovia-ai
 flutter pub get
-flutter run ```
+flutter run 
+```
 
 ---
 
