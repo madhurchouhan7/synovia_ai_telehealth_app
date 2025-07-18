@@ -22,25 +22,25 @@
 
 ### Home Page
 
-![Home Screen](assets\screenshots/home_page.png)
+![Home Screen](assets/screenshots/home_page.png)
 
 ### Nearby Doctors
 
-![Nearby Doctors](assets\screenshots/nearby_doctors.png)
-![Nearby Doctors](assets\screenshots/nearby_doctors2.png)
+![Nearby Doctors](assets/screenshots/nearby_doctors.png)
+![Nearby Doctors](assets/screenshots/nearby_doctors2.png)
 
 ### Chat Page
 
-![Chat Page](assets\screenshots/chat_page.png)
-![Chat Page](assets\screenshots/chat_page2.png)
+![Chat Page](assets/screenshots/chat_page.png)
+![Chat Page](assets/screenshots/chat_page2.png)
 
 ### Health Progress
 
-![Health Progress](assets\screenshots/health_progress.png)
+![Health Progress](assets/screenshots/health_progress.png)
 
 ### Health Reports
 
-![Health Reports](assets\screenshots/health_reports.png)
+![Health Reports](assets/screenshots/health_reports.png)
 
 ---
 
@@ -107,13 +107,15 @@ flutter run
 ---
 
 ## 🌐 Live Demo
-- ***Coming soon** on Google Play Store
-- Landing Page: synovia.health **(soon)**
+
+- 🚀 **Coming soon on Google Play Store**
+- 📩 Sign up for early access: [synovia.health](https://synovia.health) *(Launching soon!)*
 
 ---
 
 ## 🙋‍♂️ Author
-Built with ❤️ by Madhur Chouhan
+Built with ❤️ by [Madhur Chouhan](https://www.linkedin.com/in/madhur-chouhan07)
+📬 Reach out: madhurchouhan07@gmail.com
 
 ## 🤝 Contributing
 Pull requests are welcome! For major changes, please open an issue first.
