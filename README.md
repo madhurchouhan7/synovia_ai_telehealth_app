@@ -21,16 +21,16 @@
 | ------------ | -------------- | ----------- | ------------- |
 
 <p float="left">
-  <img src="assets/screenshots/chat_page.png" width="200"/>
-  <img src="assets/screenshots/chat_page2.png" width="200"/>
-  <img src="assets/screenshots/health_reports.png" width="200"/>
+  <img src="assets/screenshots/chat_page.png" width="300"/>
+  <img src="assets/screenshots/chat_page2.png" width="300"/>
+  <img src="assets/screenshots/health_reports.png" width="300"/>
 </p>
 
 <p float="left">
-  <img src="assets/screenshots/home_page.png" width="200"/>
-  <img src="assets/screenshots/nearby_doctors.png" width="200"/>
-  <img src="assets/screenshots/nearby_doctors2.png" width="200"/>
-  <img src="assets/screenshots/health_progress.png" width="200"/>
+  <img src="assets/screenshots/home_page.png" width="300"/>
+  <img src="assets/screenshots/nearby_doctors.png" width="300"/>
+  <img src="assets/screenshots/nearby_doctors2.png" width="300"/>
+  <img src="assets/screenshots/health_progress.png" width="300"/>
 </p>
 
 ---
@@ -87,8 +87,8 @@ assets/ # Images, icons, illustrations
 ## 🛠️ Run Locally
 
 ```bash
-git clone https://github.com/<your-username>/synovia-ai.git
-cd synovia-ai
+git clone https://github.com/madhurchouhan7/synovia_ai_telehealth_app.git
+cd synovia_ai_telehealth_app
 flutter pub get
 flutter run
 ```
@@ -104,14 +104,10 @@ flutter run
 
 ## 🙋‍♂️ Author
 
-Built with ❤️ by [Madhur Chouhan](https://www.linkedin.com/in/madhur-chouhan07)
-📬 Reach out: madhurchouhan07@gmail.com
+- Built with ❤️ by [Madhur Chouhan](https://www.linkedin.com/in/madhur-chouhan07)
+- 📬 Reach out: madhurchouhan07@gmail.com
 
 ## 🤝 Contributing
 
 Pull requests are welcome! For major changes, please open an issue first.
 Let's make digital healthcare smarter — together!
-
-```
-
-```
