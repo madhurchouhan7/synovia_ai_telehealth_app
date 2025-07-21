@@ -77,9 +77,9 @@ assets/ # Images, icons, illustrations
 - [x] Firestore + Hive integration
 - [x] Firebase Auth & onboarding
 - [x] Nearby doctor suggestions (location-based)
-- [ ] Disease precautions integration
+- [x] Disease precautions integration
+- [x] Landing Page with waitlist + app demo
 - [ ] Launch on Google Play Store
-- [ ] Landing Page with waitlist + app demo
 - [ ] iOS build & deployment
 
 ---
