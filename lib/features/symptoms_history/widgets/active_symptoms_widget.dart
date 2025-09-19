@@ -116,7 +116,8 @@ class ActiveSymptomsWidget extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        height: 140,
+                        // adapt height to content
+                        height: 150,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           padding: EdgeInsets.symmetric(horizontal: 16),
@@ -200,9 +201,9 @@ class ActiveSymptomsWidget extends StatelessWidget {
                                         'Recommended: ${symptom.recommendedSpecialist}',
                                         style: GoogleFonts.nunito(
                                           color: brandColor,
-                                          fontSize: 16,
+                                          fontSize: 14,
                                         ),
-                                        maxLines: 1,
+                                        maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ],

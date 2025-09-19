@@ -1,3 +1,8 @@
+![Flutter](https://img.shields.io/badge/Flutter-3.22-blue)
+![Firebase](https://img.shields.io/badge/Backend-Firebase-yellow)
+![GoogleAI](https://img.shields.io/badge/AI-Gemini-brightgreen)
+![Status](https://img.shields.io/badge/status-MVP-lightgrey)
+
 # 🧠 Synovia AI — Your Smart Telehealth Companion
 
 **Synovia AI** is an AI-powered telehealth mobile application built using **Flutter**, **Firebase**, and **Google's Gemini AI**. It helps users assess symptoms, track health conditions, and receive personalized AI-driven health insights—all from the comfort of their smartphones.
@@ -67,7 +72,7 @@ assets/ # Images, icons, illustrations
 3. Gemini AI model analyzes symptoms and generates insights.
 4. Responses are stored locally in Hive and backed up in Firestore.
 5. Health severity trends are visualized.
-6. (Upcoming) Doctor list is fetched based on location & condition.
+6. Doctor list is fetched based on location & condition.
 
 ---
 
@@ -77,7 +82,7 @@ assets/ # Images, icons, illustrations
 - [x] Firestore + Hive integration
 - [x] Firebase Auth & onboarding
 - [x] Nearby doctor suggestions (location-based)
-- [ ] Disease precautions integration
+- [x] Disease precautions integration
 - [ ] Launch on Google Play Store
 - [ ] Landing Page with waitlist + app demo
 - [ ] iOS build & deployment

@@ -243,6 +243,14 @@ class SymptomCard extends StatelessWidget {
     final TextEditingController notesController = TextEditingController(
       text: symptom.followUpNotes ?? '',
     );
+    bool isDisposed = false;
+
+    void disposeController() {
+      if (!isDisposed) {
+        notesController.dispose();
+        isDisposed = true;
+      }
+    }
 
     showDialog(
       context: context,
@@ -265,7 +273,10 @@ class SymptomCard extends StatelessWidget {
             ),
             actions: [
               TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  disposeController();
+                  Navigator.pop(context);
+                },
                 child: Text(
                   'Cancel',
                   style: GoogleFonts.nunito(color: lightTextColor),
@@ -273,14 +284,19 @@ class SymptomCard extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
+                  final text = notesController.text;
+                  disposeController();
                   Navigator.pop(context);
-                  onAddNotes(notesController.text);
+                  onAddNotes(text);
                 },
                 child: Text('Save', style: GoogleFonts.nunito()),
               ),
             ],
           ),
-    );
+    ).then((_) {
+      // Ensure disposal even if dialog is dismissed by tapping outside
+      disposeController();
+    });
   }
 }
 

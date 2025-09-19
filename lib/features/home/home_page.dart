@@ -151,9 +151,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       statusBarIconBrightness: Brightness.light,
       statusBarBrightness: Brightness.dark,
     );
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: systemUiOverlayStyle,
-      child: SafeArea(
+    return SafeArea(
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: systemUiOverlayStyle,
         child: Scaffold(
           backgroundColor: darkBackgroundColor,
           body: IndexedStack(index: _selectedIndex, children: _screensList),

@@ -34,7 +34,7 @@ class _ChatScreenState extends State<ChatPage> {
   @override
   void dispose() {
     _scrollController.dispose();
-    _inputController?.dispose();
+    // Don't dispose _inputController here as it's managed by BottomChatField
     super.dispose();
   }
 

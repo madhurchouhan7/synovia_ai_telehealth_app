@@ -47,26 +47,26 @@ class AuthService {
     await FirebaseAuth.instance.signOut();
   }
 
-  Future<GoogleSignInAccount?> attemptSilentSignIn() async {
-    await initializeGoogleSignIn();
+//   Future<GoogleSignInAccount?> attemptSilentSignIn() async {
+//     await initializeGoogleSignIn();
 
-    try {
-      final result = _googleSignIn.attemptLightweightAuthentication();
-      final account =
-          result is Future ? await result : result as GoogleSignInAccount?;
+//     try {
+//       final result = _googleSignIn.attemptLightweightAuthentication();
+//       final account =
+//           result is Future ? await result : result as GoogleSignInAccount?;
 
-      if (account != null && FirebaseAuth.instance.currentUser == null) {
-        final googleAuth = await account.authentication;
-        final credential = GoogleAuthProvider.credential(
-          idToken: googleAuth.idToken,
-        );
-        await FirebaseAuth.instance.signInWithCredential(credential);
-      }
+//       if (account != null && FirebaseAuth.instance.currentUser == null) {
+//         final googleAuth = await account.authentication;
+//         final credential = GoogleAuthProvider.credential(
+//           idToken: googleAuth.idToken,
+//         );
+//         await FirebaseAuth.instance.signInWithCredential(credential);
+//       }
 
-      return account;
-    } catch (e) {
-      print('Silent sign-in failed: $e');
-      return null;
-    }
-  }
-}
+//       return account;
+//     } catch (e) {
+//       print('Silent sign-in failed: $e');
+//       return null;
+//     }
+//   }
+ }

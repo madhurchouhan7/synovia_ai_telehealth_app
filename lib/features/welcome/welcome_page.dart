@@ -122,7 +122,7 @@ class WelcomePage extends StatelessWidget {
                       InkWell(
                         onTap: () {
                           Navigator.pushReplacement(
-                            context,
+                            context, 
                             pageRoute(SignInPage()),
                           );
                         },

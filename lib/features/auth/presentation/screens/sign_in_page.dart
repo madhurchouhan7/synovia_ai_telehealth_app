@@ -47,8 +47,8 @@ class _SignInPageState extends State<SignInPage> {
         password: _passwordController.text,
       );
       if (mounted) {
-        Navigator.of(context).popUntil((route) => route.isFirst);
-        // Do not push any new page; let main.dart StreamBuilder handle navigation
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
+        
       }
     } on FirebaseAuthException catch (e) {
       String msg = 'Sign in failed';
@@ -67,7 +67,7 @@ class _SignInPageState extends State<SignInPage> {
       }
     }
     if (mounted) setState(() => _isLoading = false);
-  }
+  } 
 
   void _signInWithGoogle() async {
     final userCred = await authService.signInWithGoogle();

@@ -8,8 +8,7 @@ import 'package:synovia_ai_telehealth_app/features/find%20nearby%20doctors/model
 
 class DoctorSearchService {
   final String _placesApiKey =
-      dotenv
-          .env['GOOGLE_PLACES_API_KEY']!; // Ensure this matches your .env key name
+      dotenv.env['GOOGLE_PLACES_API_KEY_HERE']!; // GOOGLE_PLACES_API_KEY
 
   // Function to get current location
   Future<Position> _getCurrentLocation() async {
