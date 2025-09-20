@@ -16,10 +16,10 @@ class WelcomePage extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final fontSize = screenWidth / 600;
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: darkBackgroundColor,
-        body: SizedBox.expand(
+    return Scaffold(
+      backgroundColor: darkBackgroundColor,
+      body: SafeArea(
+        child: SizedBox.expand(
           child: Padding(
             padding: EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 20),
             child: Column(
@@ -122,7 +122,7 @@ class WelcomePage extends StatelessWidget {
                       InkWell(
                         onTap: () {
                           Navigator.pushReplacement(
-                            context, 
+                            context,
                             pageRoute(SignInPage()),
                           );
                         },

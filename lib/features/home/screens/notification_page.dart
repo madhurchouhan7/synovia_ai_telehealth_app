@@ -17,10 +17,12 @@ class NotificationPage extends StatelessWidget {
         ),
         backgroundColor: Color(0xFF212C24),
       ),
-      body: Center(
-        child: Text(
-          'Notifications Screen',
-          style: TextStyle(color: Colors.white),
+      body: SafeArea(
+        child: Center(
+          child: Text(
+            'Notifications Screen',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
     );

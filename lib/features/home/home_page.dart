@@ -146,73 +146,65 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(
-      statusBarColor: Color(0xFF212C24),
-      statusBarIconBrightness: Brightness.light,
-      statusBarBrightness: Brightness.dark,
-    );
-    return SafeArea(
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: systemUiOverlayStyle,
-        child: Scaffold(
-          backgroundColor: darkBackgroundColor,
-          body: IndexedStack(index: _selectedIndex, children: _screensList),
-          bottomNavigationBar: GNav(
-            curve: Curves.easeInOut,
-            tabMargin: EdgeInsets.symmetric(horizontal: 3, vertical: 8),
-            hoverColor: Color.fromARGB(255, 65, 73, 65),
-            backgroundColor: Color(0xff343A34),
-            haptic: true,
-            gap: 10,
-            activeColor: Colors.white,
-            tabBorderRadius: 30,
-            tabActiveBorder: Border.all(color: Colors.white, width: 2),
-            selectedIndex: _selectedIndex,
-            onTabChange: (index) {
-              setState(() {
-                _selectedIndex = index;
-                if (index == 0) {
-                  _restartHomeTabAnimation();
-                }
-              });
-            },
+    return Scaffold(
+      backgroundColor: darkBackgroundColor,
+      body: SafeArea(
+        child: IndexedStack(index: _selectedIndex, children: _screensList),
+      ),
+      bottomNavigationBar: GNav(
+        curve: Curves.easeInOut,
+        tabMargin: EdgeInsets.symmetric(horizontal: 3, vertical: 8),
+        hoverColor: Color.fromARGB(255, 65, 73, 65),
+        backgroundColor: Color(0xff343A34),
+        haptic: true,
+        gap: 10,
+        activeColor: Colors.white,
+        tabBorderRadius: 30,
+        tabActiveBorder: Border.all(color: Colors.white, width: 2),
+        selectedIndex: _selectedIndex,
+        onTabChange: (index) {
+          setState(() {
+            _selectedIndex = index;
+            if (index == 0) {
+              _restartHomeTabAnimation();
+            }
+          });
+        },
 
-            tabs: [
-              GButton(
-                icon: Icons.home,
-                leading: SvgPicture.asset(SvgAssets.nav_home),
-                backgroundColor: Color(0xFF4B524B),
-              ),
-              GButton(
-                icon: Icons.search,
-                leading: SvgPicture.asset(SvgAssets.nav_document),
-                backgroundColor: Color(0xFF4B524B),
-                iconActiveColor: Colors.white,
-              ),
-              GButton(
-                icon: Icons.notifications,
-                leading: SvgPicture.asset(SvgAssets.nav_chat),
-                iconColor: lightTextColor,
-                backgroundColor: Color(0xFF4B524B),
-                iconActiveColor: Colors.white,
-              ),
-              GButton(
-                icon: Icons.assessment,
-                leading: SvgPicture.asset(SvgAssets.nav_chart),
-                iconColor: lightTextColor,
-                backgroundColor: Color(0xFF4B524B),
-                iconActiveColor: Colors.white,
-              ),
-              GButton(
-                icon: Icons.settings,
-                leading: SvgPicture.asset(SvgAssets.nav_user),
-                iconColor: lightTextColor,
-                backgroundColor: Color(0xFF4B524B),
-                iconActiveColor: Colors.white,
-              ),
-            ],
+        tabs: [
+          GButton(
+            icon: Icons.home,
+            leading: SvgPicture.asset(SvgAssets.nav_home),
+            backgroundColor: Color(0xFF4B524B),
           ),
-        ),
+          GButton(
+            icon: Icons.search,
+            leading: SvgPicture.asset(SvgAssets.nav_document),
+            backgroundColor: Color(0xFF4B524B),
+            iconActiveColor: Colors.white,
+          ),
+          GButton(
+            icon: Icons.notifications,
+            leading: SvgPicture.asset(SvgAssets.nav_chat),
+            iconColor: lightTextColor,
+            backgroundColor: Color(0xFF4B524B),
+            iconActiveColor: Colors.white,
+          ),
+          GButton(
+            icon: Icons.assessment,
+            leading: SvgPicture.asset(SvgAssets.nav_chart),
+            iconColor: lightTextColor,
+            backgroundColor: Color(0xFF4B524B),
+            iconActiveColor: Colors.white,
+          ),
+          GButton(
+            icon: Icons.settings,
+            leading: SvgPicture.asset(SvgAssets.nav_user),
+            iconColor: lightTextColor,
+            backgroundColor: Color(0xFF4B524B),
+            iconActiveColor: Colors.white,
+          ),
+        ],
       ),
     );
   }

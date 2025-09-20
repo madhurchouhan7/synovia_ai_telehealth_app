@@ -70,14 +70,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Set system UI overlay style here for consistency
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarColor: darkBackgroundColor),
-    );
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   SystemUiOverlayStyle(statusBarColor: darkBackgroundColor),
+    // );
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Synovia Telehealth App',
-      theme: ThemeData.dark(),
+      theme: ThemeData.dark(
+        useMaterial3: true, 
+        
+        ),
       home:
           showPrivacyPolicy
               ? PrivacyPolicyScreen()

@@ -47,7 +47,7 @@ class _SignInPageState extends State<SignInPage> {
         password: _passwordController.text,
       );
       if (mounted) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PersonalizedHealthInsights()));
         
       }
     } on FirebaseAuthException catch (e) {

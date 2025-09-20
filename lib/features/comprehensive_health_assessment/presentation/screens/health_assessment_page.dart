@@ -475,7 +475,7 @@ class _HealthAssessmentPageState extends State<HealthAssessmentPage> {
                               const SizedBox(height: 16),
                               SvgPicture.asset(SvgAssets.patient),
                               SwitchListTile(
-                                activeColor: brandColor,
+                                activeThumbColor: brandColor,
                                 inactiveTrackColor: secondaryColor,
 
                                 title: Text(
@@ -539,7 +539,7 @@ class _HealthAssessmentPageState extends State<HealthAssessmentPage> {
                               const SizedBox(height: 16),
                               SvgPicture.asset(SvgAssets.pills),
                               SwitchListTile(
-                                activeColor: brandColor,
+                                activeThumbColor: brandColor,
                                 inactiveTrackColor: secondaryColor,
                                 title: Text(
                                   'Yes',
@@ -602,7 +602,7 @@ class _HealthAssessmentPageState extends State<HealthAssessmentPage> {
                               const SizedBox(height: 16),
                               SvgPicture.asset(SvgAssets.alcohol_bottle),
                               SwitchListTile(
-                                activeColor: brandColor,
+                                activeThumbColor: brandColor,
                                 inactiveTrackColor: secondaryColor,
                                 title: Text(
                                   'Yes',
@@ -665,7 +665,7 @@ class _HealthAssessmentPageState extends State<HealthAssessmentPage> {
                               const SizedBox(height: 16),
                               SvgPicture.asset(SvgAssets.allergies),
                               SwitchListTile(
-                                activeColor: brandColor,
+                                activeThumbColor: brandColor,
                                 inactiveTrackColor: secondaryColor,
                                 title: Text(
                                   'Yes',
@@ -786,13 +786,42 @@ class _HealthAssessmentPageState extends State<HealthAssessmentPage> {
 
                             final user = FirebaseAuth.instance.currentUser;
                             if (user != null) {
-                              await _healthAssessmentController
-                                  .submitAssessment(user.uid);
+                              try {
+                                await _healthAssessmentController
+                                    .submitAssessment(user.uid);
+
+                                // Dismiss the loading dialog BEFORE navigation
+                                if (mounted) {
+                                  Navigator.of(
+                                    context,
+                                  ).pop(); // This dismisses the dialog
+
+                                  // Then navigate to HomePage
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    pageRoute(HomePage()),
+                                    (route) => false,
+                                  );
+                                }
+                              } catch (e) {
+                                // Handle error case - also dismiss dialog
+                                if (mounted) {
+                                  Navigator.of(
+                                    context,
+                                  ).pop(); // Dismiss dialog on error too
+                                  // Show error message if needed
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Error submitting assessment: $e',
+                                      ),
+                                    ),
+                                  );
+                                }
+                              }
+                            } else {
+                              // No user case - dismiss dialog
                               if (mounted) {
-                                Navigator.of(context).pushAndRemoveUntil(
-                                  pageRoute(HomePage()),
-                                  (route) => false,
-                                );
+                                Navigator.of(context).pop();
                               }
                             }
                           },
