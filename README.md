@@ -105,7 +105,7 @@ flutter run
 ## 🙋‍♂️ Author
 
 - Built with ❤️ by [Madhur Chouhan](https://www.linkedin.com/in/madhur-chouhan07)
-- 📬 Reach out: madhurchouhan07@gmail.com
+- 📬 Reach out: madhurchouhan7@gmail.com
 
 ## 🤝 Contributing
 
