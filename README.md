@@ -3,6 +3,7 @@
 **Synovia AI** is an AI-powered telehealth mobile application built using **Flutter**, **Firebase**, and **Google's Gemini AI**. It helps users assess symptoms, track health conditions, and receive personalized AI-driven health insights—all from the comfort of their smartphones.
 ### 🌐 Landing Page(https://synovia-landing-page.vercel.app/)
 ### ▶️ Demo video(https://youtube.com/shorts/ee1Y5Ld0jF0?feature=share)
+- 📩 APK Link [Google Drive]([https://synovia.health](https://drive.google.com/file/d/1C0FzwwcENG5JpJaXoUBoi_33ilL8wApv/view?usp=sharing))
 ---
 
 ## 🚀 Features
